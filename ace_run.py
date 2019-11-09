@@ -105,9 +105,18 @@ def parse_arguments(argv):
   parser.add_argument('--num_parallel_workers', type=int,
       help="Number of parallel jobs.",
                       default=0)
+  parser.add_argument('--batch_input', type=str, help="Path to file with arguments", default=None)
+  args = parser.parse_args()
+  if args.batch_input:
+      arg_lst = []
+      with open(args.batch_input) as f:
+          lines = f.readlines()
+          for line in lines:
+              arg_lst = arg_lst+line.replace(" ", "").split("=")
+      return parser.parse_args(arg_lst)
+
   return parser.parse_args(argv)
 
 
 if __name__ == '__main__':
     main(parse_arguments(sys.argv[1:]))
-

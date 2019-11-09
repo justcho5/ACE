@@ -5,43 +5,47 @@ import sys
 import os
 from matplotlib import pyplot as plt
 import matplotlib.gridspec as gridspec
-import tcav.model as model
 import numpy as np
 from PIL import Image
 from skimage.segmentation import mark_boundaries
 from sklearn import linear_model
 from sklearn.model_selection import cross_val_score
 import tensorflow as tf
+sys.path.append("~/Documents/EPFL/thesis/project/hnsc/tcav/tcav")
+import model
 
-def make_model(sess, model_to_run, model_path, 
+
+def make_model(sess, model_to_run, model_path,
                labels_path, randomize=False,):
-  """Make an instance of a model.
+    """Make an instance of a model.
 
-  Args:
+    Args:
     sess: tf session instance.
     model_to_run: a string that describes which model to make.
     model_path: Path to models saved graph.
     randomize: Start with random weights
     labels_path: Path to models line separated class names text file.
 
-  Returns:
+    Returns:
     a model instance.
 
-  Raises:
+    Raises:
     ValueError: If model name is not valid.
-  """
-  if model_to_run == 'InceptionV3':
-    mymodel = model.InceptionV3Wrapper_public(
-        sess, model_saved_path=model_path, labels_path=labels_path)
-  elif model_to_run == 'GoogleNet':
-    # common_typos_disable
-    mymodel = model.GoolgeNetWrapper_public(
-        sess, model_saved_path=model_path, labels_path=labels_path)
-  else:
-    raise ValueError('Invalid model name')
-  if randomize:  # randomize the network!
-    sess.run(tf.global_variables_initializer())
-  return mymodel
+    """
+    if model_to_run == 'InceptionV3':
+       mymodel = model.InceptionV3Wrapper_public(
+       sess, model_saved_path=model_path, labels_path=labels_path)
+    elif model_to_run == 'GoogleNet':
+       # common_typos_disable
+       mymodel = model.GoolgeNetWrapper_public(
+       sess, model_saved_path=model_path, labels_path=labels_path)
+    elif model_to_run == 'Xception':
+       mymodel= model.XceptionHPVWrapper(sess, model_saved_path=model_path, labels_path=labels_path)
+    else:
+       raise ValueError('Invalid model name')
+       if randomize:  # randomize the network!
+       sess.run(tf.global_variables_initializer())
+   return mymodel
 
 
 def load_image_from_file(filename, shape):
@@ -473,4 +477,3 @@ def save_images(addresses, images):
   for address, image in zip(addresses, images):
     with tf.gfile.Open(address, 'w') as f:
       Image.fromarray(image).save(f, format='PNG')
-
