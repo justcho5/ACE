@@ -16,7 +16,7 @@ import model
 
 
 def make_model(sess, model_to_run, model_path,
-               labels_path, randomize=False,):
+labels_path, randomize=False,):
     """Make an instance of a model.
 
     Args:
@@ -33,19 +33,19 @@ def make_model(sess, model_to_run, model_path,
     ValueError: If model name is not valid.
     """
     if model_to_run == 'InceptionV3':
-       mymodel = model.InceptionV3Wrapper_public(
-       sess, model_saved_path=model_path, labels_path=labels_path)
+        mymodel = model.InceptionV3Wrapper_public(
+        sess, model_saved_path=model_path, labels_path=labels_path)
     elif model_to_run == 'GoogleNet':
-       # common_typos_disable
-       mymodel = model.GoolgeNetWrapper_public(
-       sess, model_saved_path=model_path, labels_path=labels_path)
+        # common_typos_disable
+        mymodel = model.GoolgeNetWrapper_public(
+        sess, model_saved_path=model_path, labels_path=labels_path)
     elif model_to_run == 'Xception':
-       mymodel= model.XceptionHPVWrapper(sess, model_saved_path=model_path, labels_path=labels_path)
+        mymodel= model.XceptionHPVWrapper(sess, model_saved_path=model_path, labels_path=labels_path)
     else:
-       raise ValueError('Invalid model name')
-       if randomize:  # randomize the network!
+        raise ValueError('Invalid model name')
+    if randomize:  # randomize the network!
         sess.run(tf.global_variables_initializer())
-   return mymodel
+    return mymodel
 
 
 def load_image_from_file(filename, shape):
