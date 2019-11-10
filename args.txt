@@ -1,11 +1,10 @@
 --num_parallel_runs = 0
 --target_class = "positive"
 --source_dir = "/mnt/gpucluster/hnsc/data/hnsc_slides/tiles/all/hpv_positive/source_dir"
---proj_dir = "/mnt/gpucluster/hnsc/histoXai/ace_projects/ace_test_hpv/"
---working_dir = os.path.join(proj_dir, "save_dir")
+--working_dir = os.path.join("/mnt/gpucluster/hnsc/histoXai/ace_projects/ace_test_hpv/", "save_dir")
 --model_to_run = "Xception"
---model_path = os.path.join(proj_dir, frozen_model.pb)
---labels_path = os.path.join(proj_dir, labels.txt)
+--model_path = os.path.join("/mnt/gpucluster/hnsc/histoXai/ace_projects/ace_test_hpv/", frozen_model.pb)
+--labels_path = os.path.join("/mnt/gpucluster/hnsc/histoXai/ace_projects/ace_test_hpv/", labels.txt)
 --bottlenecks = "add_11/add"
 --num_random_exp = 20
 --max_imgs = 50
