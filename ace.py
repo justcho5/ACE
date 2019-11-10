@@ -289,6 +289,9 @@ class ConceptDiscovery(object):
     Returns:
       The array of activations
     """
+    print(imgs)
+    print(bottleneck)
+    
     if channel_mean is None:
       channel_mean = self.channel_mean
     if self.num_workers:
