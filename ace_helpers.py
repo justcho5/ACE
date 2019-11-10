@@ -44,7 +44,7 @@ def make_model(sess, model_to_run, model_path,
     else:
        raise ValueError('Invalid model name')
        if randomize:  # randomize the network!
-       sess.run(tf.global_variables_initializer())
+        sess.run(tf.global_variables_initializer())
    return mymodel
 
 
