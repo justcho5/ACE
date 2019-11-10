@@ -12,7 +12,7 @@ from sklearn import linear_model
 from sklearn.model_selection import cross_val_score
 import tensorflow as tf
 sys.path.append("~/Documents/EPFL/thesis/project/hnsc/tcav/")
-import tcav.model
+import tcav.model as model
 
 
 def make_model(sess, model_to_run, model_path,
