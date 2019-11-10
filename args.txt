@@ -1,4 +1,4 @@
---num_parallel_runs = 0
+--num_parallel_workers = 0
 --target_class = "positive"
 --source_dir = "/mnt/gpucluster/hnsc/data/hnsc_slides/tiles/all/hpv_positive/source_dir"
 --working_dir = os.path.join("/mnt/gpucluster/hnsc/histoXai/ace_projects/ace_test_hpv/", "save_dir")
