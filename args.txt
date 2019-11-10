@@ -3,8 +3,8 @@
 --source_dir = /mnt/gpucluster/hnsc/data/hnsc_slides/tiles/all/hpv_positive/source_dir
 --working_dir = /home/hjcho/projects/hnsc/histoXai/ace_projects/ace_test_hpv/save_dir
 --model_to_run = Xception
---model_path = /mnt/gpucluster/hnsc/histoXai/ace_projects/ace_test_hpv/frozen_model.pb
---labels_path = /mnt/gpucluster/hnsc/histoXai/ace_projects/ace_test_hpv/labels.txt
+--model_path = /home/hjcho/projects/hnsc/histoXai/ace_projects/ace_test_hpv/frozen_model.pb
+--labels_path = /home/hjcho/projects/hnsc/histoXai/ace_projects/ace_test_hpv/labels.txt
 --bottlenecks = add_11/add
 --num_random_exp = 20
 --max_imgs = 50
