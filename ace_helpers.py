@@ -33,7 +33,8 @@ labels_path, randomize=False,):
     ValueError: If model name is not valid.
     """
     print("model to run {}".format(model_to_run))
-    print(model_to_run == "Xception")
+    print(type(model_to_run))
+    print(type("Xception"))
     if model_to_run == 'InceptionV3':
         mymodel = model.InceptionV3Wrapper_public(
         sess, model_saved_path=model_path, labels_path=labels_path)
@@ -41,7 +42,7 @@ labels_path, randomize=False,):
         # common_typos_disable
         mymodel = model.GoolgeNetWrapper_public(
         sess, model_saved_path=model_path, labels_path=labels_path)
-    elif model_to_run == "Xception":
+    elif model_to_run in "Xception":
         mymodel= model.XceptionHPVWrapper(sess, model_saved_path=model_path, labels_path=labels_path)
     else:
         raise ValueError('Invalid model name')
