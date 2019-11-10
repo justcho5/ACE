@@ -32,6 +32,7 @@ def main(args):
   tf.gfile.MakeDirs(results_summaries_dir)
   random_concept = 'random_discovery'  # Random concept for statistical testing
   sess = utils.create_session()
+  print(args.model_to_run)
   mymodel = ace_helpers.make_model(
       sess, args.model_to_run, args.model_path, args.labels_path)
   # Creating the ConceptDiscovery class instance
