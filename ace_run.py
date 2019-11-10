@@ -6,7 +6,7 @@ sys.path.append("/mnt/gpucluster/packages/tcav")
 import os
 import numpy as np
 import sklearn.metrics as metrics
-import tcav.utils
+import tcav.utils as utils
 import tensorflow as tf
 
 import ace_helpers
