@@ -22,6 +22,7 @@ def main(args):
   cavs_dir = os.path.join(args.working_dir, 'cavs/')
   activations_dir = os.path.join(args.working_dir, 'acts/')
   results_summaries_dir = os.path.join(args.working_dir, 'results_summaries/')
+  print(args.working_dir)
   if tf.gfile.Exists(args.working_dir):
     tf.gfile.DeleteRecursively(args.working_dir)
   tf.gfile.MakeDirs(args.working_dir)
