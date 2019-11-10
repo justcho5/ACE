@@ -2,6 +2,7 @@
 
 
 import sys
+sys.path.append("/mnt/gpucluster/packages/tcav")
 import os
 import numpy as np
 import sklearn.metrics as metrics
