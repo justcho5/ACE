@@ -34,7 +34,7 @@ def main(args):
   sess = utils.create_session()
   print(args.model_to_run)
   mymodel = ace_helpers.make_model(
-      sess, args.model_to_run, args.model_path, args.labels_path)
+      sess, str(args.model_to_run), args.model_path, args.labels_path)
   # Creating the ConceptDiscovery class instance
   cd = ConceptDiscovery(
       mymodel,
