@@ -2,7 +2,9 @@
 
 
 import sys
+sys.path.append("/Users/justina/Documents/EPFL/thesis/project/hnsc/histoXai/tcav")
 sys.path.append("/home/hjcho/projects/tcav")
+
 import os
 import numpy as np
 import sklearn.metrics as metrics
@@ -23,14 +25,14 @@ def main(args):
   activations_dir = os.path.join(args.working_dir, 'acts/')
   results_summaries_dir = os.path.join(args.working_dir, 'results_summaries/')
   # print(args.working_dir)
-  # if tf.gfile.Exists(args.working_dir):
-  #   tf.gfile.DeleteRecursively(args.working_dir)
-  # tf.gfile.MakeDirs(args.working_dir)
-  # tf.gfile.MakeDirs(discovered_concepts_dir)
-  # tf.gfile.MakeDirs(results_dir)
-  # tf.gfile.MakeDirs(cavs_dir)
-  # tf.gfile.MakeDirs(activations_dir)
-  # tf.gfile.MakeDirs(results_summaries_dir)
+  if tf.gfile.Exists(args.working_dir):
+    tf.gfile.DeleteRecursively(args.working_dir)
+  tf.gfile.MakeDirs(args.working_dir)
+  tf.gfile.MakeDirs(discovered_concepts_dir)
+  tf.gfile.MakeDirs(results_dir)
+  tf.gfile.MakeDirs(cavs_dir)
+  tf.gfile.MakeDirs(activations_dir)
+  tf.gfile.MakeDirs(results_summaries_dir)
   random_concept = 'random_discovery'  # Random concept for statistical testing
   sess = utils.create_session()
   print(args.model_to_run)

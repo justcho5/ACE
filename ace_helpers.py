@@ -12,6 +12,7 @@ from sklearn import linear_model
 from sklearn.model_selection import cross_val_score
 import tensorflow as tf
 sys.path.append("~/Documents/EPFL/thesis/project/hnsc/tcav/")
+sys.path.append("/home/hjcho/projects/tcav")
 import tcav.model as model
 
 
@@ -32,9 +33,7 @@ labels_path, randomize=False,):
     Raises:
     ValueError: If model name is not valid.
     """
-    print("model to run {}".format(model_to_run))
-    print(type(model_to_run))
-    print(type("Xception"))
+
     if model_to_run == 'InceptionV3':
         mymodel = model.InceptionV3Wrapper_public(
         sess, model_saved_path=model_path, labels_path=labels_path)
@@ -62,17 +61,19 @@ def load_image_from_file(filename, shape):
     exception if the image was not the right shape.
   """
   if not tf.gfile.Exists(filename):
-    tf.logging.error('Cannot find file: {}'.format(filename))
-    return None
-  try:
-    img = np.array(Image.open(filename).resize(
-        shape, Image.BILINEAR))
-    # Normalize pixel values to between 0 and 1.
-    img = np.float32(img) / 255.0
-    if not (len(img.shape) == 3 and img.shape[2] == 3):
+      tf.logging.error('Cannot find file: {}'.format(filename))
       return None
-    else:
-      return img
+
+  try:
+      img = np.array(Image.open(filename).resize(
+      shape, Image.BILINEAR))
+
+      # Normalize pixel values to between 0 and 1.
+      img = np.float32(img) / 255.0
+      if not (len(img.shape) == 3 and img.shape[2] == 3):
+          return None
+      else:
+          return img
 
   except Exception as e:
     tf.logging.info(e)

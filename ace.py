@@ -93,6 +93,7 @@ class ConceptDiscovery(object):
     self.channel_mean = channel_mean
     self.random_concept = random_concept
     self.image_shape = model.get_image_shape()[:2]
+    print(self.image_shape)
     self.max_imgs = max_imgs
     self.min_imgs = min_imgs
     if num_discovery_imgs is None:
@@ -112,10 +113,12 @@ class ConceptDiscovery(object):
       Images of the desired concept or class.
     """
     concept_dir = os.path.join(self.source_dir, concept)
+    print(concept_dir)
     img_paths = [
         os.path.join(concept_dir, d)
         for d in tf.gfile.ListDirectory(concept_dir)
     ]
+    print(img_paths)
     return load_images_from_files(
         img_paths,
         max_imgs=max_imgs,
@@ -147,9 +150,8 @@ class ConceptDiscovery(object):
       param_dict = {}
     dataset, image_numbers, patches = [], [], []
     if discovery_images is None:
-      raw_imgs = self.load_concept_imgs(
-          self.target_class, self.num_discovery_imgs)
-      self.discovery_images = raw_imgs
+        raw_imgs = self.load_concept_imgs(self.target_class, self.num_discovery_imgs)
+        self.discovery_images = raw_imgs
     else:
       self.discovery_images = discovery_images
     if self.num_workers:
@@ -291,7 +293,7 @@ class ConceptDiscovery(object):
     """
     print(imgs)
     print(bottleneck)
-    
+
     if channel_mean is None:
       channel_mean = self.channel_mean
     if self.num_workers:
@@ -778,4 +780,3 @@ class ConceptDiscovery(object):
     if mean:
       profile = np.mean(profile, -1)
     return profile
-
