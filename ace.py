@@ -113,12 +113,10 @@ class ConceptDiscovery(object):
       Images of the desired concept or class.
     """
     concept_dir = os.path.join(self.source_dir, concept)
-    print(concept_dir)
     img_paths = [
         os.path.join(concept_dir, d)
         for d in tf.gfile.ListDirectory(concept_dir)
     ]
-    print(img_paths)
     return load_images_from_files(
         img_paths,
         max_imgs=max_imgs,
@@ -291,8 +289,7 @@ class ConceptDiscovery(object):
     Returns:
       The array of activations
     """
-    print(imgs)
-    print(bottleneck)
+
 
     if channel_mean is None:
       channel_mean = self.channel_mean
@@ -304,8 +301,7 @@ class ConceptDiscovery(object):
     else:
       output = []
       for i in range(int(imgs.shape[0] / bs) + 1):
-        output.append(
-            self.model.run_examples(imgs[i * bs:(i + 1) * bs], bottleneck))
+        output.append(self.model.run_examples(imgs[i * bs:(i + 1) * bs], bottleneck))
     output = np.concatenate(output, 0)
     if channel_mean and len(output.shape) > 3:
       output = np.mean(output, (1, 2))
