@@ -469,6 +469,7 @@ class ConceptDiscovery(object):
     """
     rnd_acts_path = os.path.join(self.activation_dir, 'acts_{}_{}'.format(
         random_concept, bottleneck))
+    
     if not tf.gfile.Exists(rnd_acts_path):
       rnd_imgs = self.load_concept_imgs(random_concept, self.max_imgs)
       acts = get_acts_from_images(rnd_imgs, self.model, bottleneck)
