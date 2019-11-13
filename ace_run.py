@@ -2,7 +2,7 @@
 
 
 import sys
-sys.path.append("/Users/justina/Documents/EPFL/thesis/project/hnsc/histoXai/tcav")
+sys.path.append("/Users/justina/Documents/EPFL/thesis/projects/hnsc/histoXai/tcav")
 sys.path.append("/home/hjcho/projects/tcav")
 
 import os

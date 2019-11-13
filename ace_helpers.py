@@ -42,7 +42,7 @@ labels_path, randomize=False,):
         mymodel = model.GoolgeNetWrapper_public(
         sess, model_saved_path=model_path, labels_path=labels_path)
     elif model_to_run == model_to_run:
-        mymodel= model.XceptionHPVWrapper(sess, model_saved_path=model_path, labels_path=labels_path)
+        mymodel= model.XceptionHPVWrapper_public(sess, model_path, labels_path)
     else:
         raise ValueError('Invalid model name')
     if randomize:  # randomize the network!
