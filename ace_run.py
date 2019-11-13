@@ -3,7 +3,7 @@
 
 import sys
 sys.path.append("/Users/justina/Documents/EPFL/thesis/projects/hnsc/histoXai/tcav")
-sys.path.append("/home/hjcho/projects/tcav")
+sys.path.append("/home/hjcho/projects/hnsc/histoXai/tcav")
 
 import os
 import numpy as np
