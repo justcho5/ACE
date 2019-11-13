@@ -41,7 +41,7 @@ labels_path, randomize=False,):
         # common_typos_disable
         mymodel = model.GoolgeNetWrapper_public(
         sess, model_saved_path=model_path, labels_path=labels_path)
-    elif model_to_run == model_to_run:
+    elif model_to_run == 'XceptionHPV':
         mymodel= model.XceptionHPVWrapper_public(sess, model_path, labels_path)
     else:
         raise ValueError('Invalid model name')
