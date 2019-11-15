@@ -275,7 +275,7 @@ class ConceptDiscovery(object):
                                           Image.BICUBIC)).astype(float) / 255
     return image_resized, patch
 
-  def _patch_activations(self, imgs, bottleneck, bs=100, channel_mean=None):
+  def _patch_activations(self, imgs, bottleneck, bs=16, channel_mean=None):
     """Returns activations of a list of imgs.
 
     Args:
@@ -621,7 +621,7 @@ class ConceptDiscovery(object):
       bn_grads = np.zeros((acts.shape[0], np.prod(acts.shape[1:])))
       for i in range(len(acts)):
         bn_grads[i] = self.model.get_gradient(
-            acts[i:i+1], [class_id], bn).reshape(-1)
+            acts[i:i+1], [class_id], bn, None).reshape(-1)
       gradients[bn] = bn_grads
     return gradients
 
