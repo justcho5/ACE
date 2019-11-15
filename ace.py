@@ -93,7 +93,6 @@ class ConceptDiscovery(object):
     self.channel_mean = channel_mean
     self.random_concept = random_concept
     self.image_shape = model.get_image_shape()[:2]
-    print(self.image_shape)
     self.max_imgs = max_imgs
     self.min_imgs = min_imgs
     if num_discovery_imgs is None:
@@ -469,7 +468,7 @@ class ConceptDiscovery(object):
     """
     rnd_acts_path = os.path.join(self.activation_dir, 'acts_{}_{}'.format(
         random_concept, bottleneck))
-    
+
     if not tf.gfile.Exists(rnd_acts_path):
       rnd_imgs = self.load_concept_imgs(random_concept, self.max_imgs)
       acts = get_acts_from_images(rnd_imgs, self.model, bottleneck)
