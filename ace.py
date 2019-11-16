@@ -170,8 +170,14 @@ class ConceptDiscovery(object):
           dataset.append(superpixel)
           patches.append(patch)
           image_numbers.append(fn)
-    self.dataset, self.image_numbers, self.patches =\
-    np.array(dataset), np.array(image_numbers), np.array(patches)
+    self.dataset = np.array(dataset)
+    del dataset
+    self.image_numbers = np.array(image_numbers)
+    del image_numbers
+    self.patches = np.array(patches)
+    del patches
+    # self.dataset, self.image_numbers, self.patches =\
+    # np.array(dataset), np.array(image_numbers), np.array(patches)
 
   def _return_superpixels(self, img, method='slic',
                           param_dict=None):
@@ -274,7 +280,7 @@ class ConceptDiscovery(object):
                                           Image.BICUBIC)).astype(float) / 255
     return image_resized, patch
 
-  def _patch_activations(self, imgs, bottleneck, bs=16, channel_mean=None):
+  def _patch_activations(self, imgs, bottleneck, bs=8, channel_mean=None):
     """Returns activations of a list of imgs.
 
     Args:
