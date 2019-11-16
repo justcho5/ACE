@@ -170,6 +170,7 @@ class ConceptDiscovery(object):
           dataset.append(superpixel)
           patches.append(patch)
           image_numbers.append(fn)
+
     self.dataset = np.array(dataset)
     del dataset
     self.image_numbers = np.array(image_numbers)
@@ -178,6 +179,7 @@ class ConceptDiscovery(object):
     del patches
     # self.dataset, self.image_numbers, self.patches =\
     # np.array(dataset), np.array(image_numbers), np.array(patches)
+
 
   def _return_superpixels(self, img, method='slic',
                           param_dict=None):
