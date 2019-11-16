@@ -170,6 +170,9 @@ class ConceptDiscovery(object):
           dataset.append(superpixel)
           patches.append(patch)
           image_numbers.append(fn)
+    print(len(dataset))
+    print(len(image_numbers))
+    print(len(patches))
     self.dataset, self.image_numbers, self.patches =\
     np.array(dataset), np.array(image_numbers), np.array(patches)
 
