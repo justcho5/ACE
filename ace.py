@@ -157,8 +157,13 @@ class ConceptDiscovery(object):
           lambda img: self._return_superpixels(img, method, param_dict),
           self.discovery_images)
       for fn, sp_outputs in enumerate(outputs):
+        print("length")
+        print(len(outputs))
         image_superpixels, image_patches = sp_outputs
         for superpixel, patch in zip(image_superpixels, image_patches):
+          print("asdf")
+          print(superpixel)
+          print(patch)
           dataset.append(superpixel)
           patches.append(patch)
           image_numbers.append(fn)
