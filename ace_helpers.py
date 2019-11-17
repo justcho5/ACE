@@ -304,6 +304,7 @@ def plot_concepts(cd, bn, num=10, address=None, mode='diverse', concepts=None):
     else:
       raise ValueError('Invalid mode!')
     idxs = idxs[:num]
+
     for i, idx in enumerate(idxs):
       print(idx)
       ax = plt.Subplot(fig, inner[i])
