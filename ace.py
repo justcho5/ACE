@@ -112,6 +112,7 @@ class ConceptDiscovery(object):
       Images of the desired concept or class.
     """
     concept_dir = os.path.join(self.source_dir, concept)
+    print(concept_dir)
     img_paths = [
         os.path.join(concept_dir, d)
         for d in tf.gfile.ListDirectory(concept_dir)
