@@ -128,7 +128,7 @@ def load_images_from_files(filenames, max_imgs=500, return_filenames=False,
     return np.array(imgs)
 
 
-def get_acts_from_images(imgs, model, bottleneck_name):
+def get_acts_from_images(imgs, model, bottleneck_name, bs=16):
   """Run images in the model to get the activations.
   Args:
     imgs: a list of images
@@ -137,7 +137,12 @@ def get_acts_from_images(imgs, model, bottleneck_name):
   Returns:
     numpy array of activations.
   """
-  return np.asarray(model.run_examples(imgs, bottleneck_name)).squeeze()
+  output = []
+  for i in range(int(imgs.shape[0] / bs) + 1):
+    output.append(self.model.run_examples(imgs[i * bs:(i + 1) * bs], bottleneck))
+  output = np.concatenate(output, 0)
+  return output.squeeze()
+  # return np.asarray(model.run_examples(imgs, bottleneck_name)).squeeze()
 
 
 def flat_profile(cd, images, bottlenecks=None):
