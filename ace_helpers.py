@@ -128,7 +128,7 @@ def load_images_from_files(filenames, max_imgs=500, return_filenames=False,
     return np.array(imgs)
 
 
-def get_acts_from_images(imgs, model, bottleneck_name, bs=16):
+def get_acts_from_images(imgs, model, bottleneck_name, bs=8):
   """Run images in the model to get the activations.
   Args:
     imgs: a list of images
