@@ -139,7 +139,7 @@ def get_acts_from_images(imgs, model, bottleneck_name, bs=16):
   """
   output = []
   for i in range(int(imgs.shape[0] / bs) + 1):
-    output.append(model.run_examples(imgs[i * bs:(i + 1) * bs], bottleneck))
+    output.append(model.run_examples(imgs[i * bs:(i + 1) * bs], bottleneck_name))
   output = np.concatenate(output, 0)
   return output.squeeze()
   # return np.asarray(model.run_examples(imgs, bottleneck_name)).squeeze()
@@ -308,7 +308,7 @@ def plot_concepts(cd, bn, num=10, address=None, mode='diverse', concepts=None):
     for i, idx in enumerate(idxs):
       print(idx)
       ax = plt.Subplot(fig, inner[i])
-      ax.imshow(concept_images[idx])
+      ax.imshow(concept_images[idx].astype(np.float32))
       ax.set_xticks([])
       ax.set_yticks([])
       if i == int(num / 2):
@@ -316,8 +316,9 @@ def plot_concepts(cd, bn, num=10, address=None, mode='diverse', concepts=None):
       ax.grid(False)
       fig.add_subplot(ax)
       ax = plt.Subplot(fig, inner[i + num])
-      mask = 1 - (np.mean(concept_patches[idx] == float(
+      mask = 1 - (np.mean(concept_patches[idx].astype(np.float32) == float(
           cd.average_image_value) / 255, -1) == 1)
+      print(concept_image_numbers[idx])
       image = cd.discovery_images[concept_image_numbers[idx]]
       ax.imshow(mark_boundaries(image, mask, color=(1, 1, 0), mode='thick'))
       ax.set_xticks([])

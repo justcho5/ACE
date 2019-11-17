@@ -181,7 +181,7 @@ class ConceptDiscovery(object):
     del image_patches
     self.dataset = np.array(dataset, dtype=np.float16)
     del dataset
-    self.image_numbers = np.array(image_numbers, dtype=np.float16)
+    self.image_numbers = np.array(image_numbers, dtype=np.int16)
     del image_numbers
     self.patches = np.array(patches, dtype=np.float16)
     del patches
