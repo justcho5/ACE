@@ -139,7 +139,7 @@ def get_acts_from_images(imgs, model, bottleneck_name, bs=16):
   """
   output = []
   for i in range(int(imgs.shape[0] / bs) + 1):
-    output.append(self.model.run_examples(imgs[i * bs:(i + 1) * bs], bottleneck))
+    output.append(model.run_examples(imgs[i * bs:(i + 1) * bs], bottleneck))
   output = np.concatenate(output, 0)
   return output.squeeze()
   # return np.asarray(model.run_examples(imgs, bottleneck_name)).squeeze()
@@ -304,7 +304,9 @@ def plot_concepts(cd, bn, num=10, address=None, mode='diverse', concepts=None):
     else:
       raise ValueError('Invalid mode!')
     idxs = idxs[:num]
+
     for i, idx in enumerate(idxs):
+      print(idx)
       ax = plt.Subplot(fig, inner[i])
       ax.imshow(concept_images[idx])
       ax.set_xticks([])
