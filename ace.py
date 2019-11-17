@@ -143,10 +143,12 @@ class ConceptDiscovery(object):
                 {'n_segments':[15,50,80], 'compactness':[10,10,10]} for slic
                 method.
     """
+    print("START MAKING PATCHES")
     if param_dict is None:
       param_dict = {}
     dataset, image_numbers, patches = [], [], []
     if discovery_images is None:
+        print("target class images")
         raw_imgs = self.load_concept_imgs(self.target_class, self.num_discovery_imgs)
         self.discovery_images = raw_imgs
     else:
@@ -157,30 +159,31 @@ class ConceptDiscovery(object):
           lambda img: self._return_superpixels(img, method, param_dict),
           self.discovery_images)
       for fn, sp_outputs in enumerate(outputs):
-        print("length")
-        print(len(outputs))
         image_superpixels, image_patches = sp_outputs
         for superpixel, patch in zip(image_superpixels, image_patches):
-          print("asdf")
-          print(superpixel)
-          print(patch)
           dataset.append(superpixel)
           patches.append(patch)
           image_numbers.append(fn)
     else:
+      print("num images: {}".format(len(self.discovery_images)))
       for fn, img in enumerate(self.discovery_images):
+        
         image_superpixels, image_patches = self._return_superpixels(
             img, method, param_dict)
+        print(len(image_superpixels))
+        print(len(image_patches))
         for superpixel, patch in zip(image_superpixels, image_patches):
           dataset.append(superpixel)
           patches.append(patch)
           image_numbers.append(fn)
-
-    self.dataset = np.array(dataset)
+    print("starting np loading")
+    del image_superpixels
+    del image_patches
+    self.dataset = np.array(dataset, dtype=np.float16)
     del dataset
-    self.image_numbers = np.array(image_numbers)
+    self.image_numbers = np.array(image_numbers, dtype=np.float16)
     del image_numbers
-    self.patches = np.array(patches)
+    self.patches = np.array(patches, dtype=np.float16)
     del patches
     # self.dataset, self.image_numbers, self.patches =\
     # np.array(dataset), np.array(image_numbers), np.array(patches)

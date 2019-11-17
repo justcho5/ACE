@@ -66,10 +66,13 @@ def main(args):
   del cd.dataset  # Free memory
   del cd.image_numbers
   del cd.patches
-  # Save discovered concept images (resized and original sized)
+  print("done with discover")
+# Save discovered concept images (resized and original sized)
   ace_helpers.save_concepts(cd, discovered_concepts_dir)
   # Calculating CAVs and TCAV scores
+  print("beginning to compute cavs")
   cav_accuraciess = cd.cavs(min_acc=0.0)
+  print(cv_acc)
   scores = cd.tcavs(test=False)
   ace_helpers.save_ace_report(cd, cav_accuraciess, scores,
                                  results_summaries_dir + 'ace_results.txt')
