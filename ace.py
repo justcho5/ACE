@@ -159,7 +159,6 @@ class ConceptDiscovery(object):
       outputs = pool.map(
           lambda img: self._return_superpixels(img, method, param_dict),
           discovery_images)
-      gc.collect() # Free memory
       for fn, sp_outputs in enumerate(outputs):
         image_superpixels, image_patches = sp_outputs
         for superpixel, patch in zip(image_superpixels, image_patches):
@@ -169,9 +168,11 @@ class ConceptDiscovery(object):
     else:
       print("num images: {}".format(len(discovery_images)))
       for fn, img in enumerate(discovery_images):
-
+        print(fn)
         image_superpixels, image_patches = self._return_superpixels(
             img, method, param_dict)
+        gc.collect() # Free memory
+
         for superpixel, patch in zip(image_superpixels, image_patches):
           dataset.append(superpixel)
           patches.append(patch)
