@@ -255,7 +255,7 @@ def binary_dataset(pos, neg, balanced=True):
   return x, y
 
 
-def plot_concepts(cd, bn, num=10, address=None, mode='diverse', concepts=None):
+def plot_concepts(cd, bn, discovery_images,num=10, address=None, mode='diverse', concepts=None):
   """Plots examples of discovered concepts.
 
   Args:
@@ -319,7 +319,7 @@ def plot_concepts(cd, bn, num=10, address=None, mode='diverse', concepts=None):
       mask = 1 - (np.mean(concept_patches[idx].astype(np.float32) == float(
           cd.average_image_value) / 255, -1) == 1)
       print(concept_image_numbers[idx])
-      image = cd.discovery_images[concept_image_numbers[idx]]
+      image = discovery_images[concept_image_numbers[idx]]
       ax.imshow(mark_boundaries(image, mask, color=(1, 1, 0), mode='thick'))
       ax.set_xticks([])
       ax.set_yticks([])

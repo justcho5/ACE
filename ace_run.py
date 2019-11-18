@@ -2,6 +2,7 @@
 
 
 import sys
+from sys import getsizeof
 sys.path.append("/Users/justina/Documents/EPFL/thesis/projects/hnsc/histoXai/tcav")
 sys.path.append("/home/hjcho/projects/hnsc/histoXai/tcav")
 
@@ -58,9 +59,7 @@ def main(args):
   # Creating the dataset of image patches and discover concepts
   # returns concept discovery target class images
   discovery_images = cd.create_patches(param_dict={'n_segments': [15, 50, 80]})
-  all_objects = muppy.get_objects()
-  sum1 = summary.summarize(all_objects)
-  summary.print_(sum1)
+
   # Saving the concept discovery target class images
   image_dir = os.path.join(discovered_concepts_dir, 'images')
   tf.gfile.MakeDirs(image_dir)
@@ -75,7 +74,7 @@ def main(args):
   #
 
 
-
+  print(getsizeof(discovery_images))
   print("done with discover")
 # Save discovered concept images (resized and original sized)
   ace_helpers.save_concepts(cd, discovered_concepts_dir)
@@ -90,7 +89,7 @@ def main(args):
                                  results_summaries_dir + 'ace_results.txt')
   # Plot examples of discovered concepts
   for bn in cd.bottlenecks:
-    ace_helpers.plot_concepts(cd, bn, 10, address=results_dir)
+    ace_helpers.plot_concepts(cd, bn, discovery_images, 10, address=results_dir)
   # Delete concepts that don't pass statistical testing
   cd.test_and_remove_concepts(scores)
 

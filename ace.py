@@ -150,9 +150,8 @@ class ConceptDiscovery(object):
     dataset, image_numbers, patches = [], [], []
     if discovery_images is None:
         print("target class images")
-        raw_imgs = self.load_concept_imgs(self.target_class, self.num_discovery_imgs)
-        discovery_images = raw_imgs
-        del raw_imgs
+        discovery_images = self.load_concept_imgs(self.target_class, self.num_discovery_imgs)
+        
     else:
       discovery_images = discovery_images
     if self.num_workers:
@@ -182,18 +181,18 @@ class ConceptDiscovery(object):
     np_patches = np.array(patches, dtype=np.float16)
 
     #
-    all_objects = muppy.get_objects()
-    sum1 = summary.summarize(all_objects)
-    summary.print_(sum1)
+    # all_objects = muppy.get_objects()
+    # sum1 = summary.summarize(all_objects)
+    # summary.print_(sum1)
 
 
-
+    print("end of np loading")
     self.discover_concepts(np_dataset, np_image_numbers, np_patches, discovery_images, method='KM', param_dicts={'n_clusters': 10})
     return discovery_images
 
     # self.dataset, self.image_numbers, self.patches =\
     # np.array(dataset), np.array(image_numbers), np.array(patches)
-    print("end of np loading")
+
 
   def _return_superpixels(self, img, method='slic',
                           param_dict=None):
