@@ -388,7 +388,7 @@ def similarity(cd, num_random_exp=None, num_workers=25):
   similarity_dic = {bn: {} for bn in cd.bottlenecks}
   if num_random_exp is None:
     num_random_exp = cd.num_random_exp
-  randoms = ['random500_{}'.format(i) for i in np.arange(num_random_exp)]
+  randoms = ['random50_{}'.format(i) for i in np.arange(num_random_exp)]
   concepts = {}
   for bn in cd.bottlenecks:
     concepts[bn] = [cd.target_class, cd.random_concept] + cd.dic[bn]['concepts']

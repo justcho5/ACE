@@ -1,4 +1,5 @@
 """This script runs the whole ACE method."""
+from pympler import muppy, summary
 
 
 import sys
@@ -61,6 +62,7 @@ def main(args):
   tf.gfile.MakeDirs(image_dir)
   ace_helpers.save_images(image_dir,
                             (cd.discovery_images * 256).astype(np.uint8))
+
   # Discovering Concepts
   cd.discover_concepts(method='KM', param_dicts={'n_clusters': 10})
   del cd.dataset  # Free memory
@@ -69,6 +71,11 @@ def main(args):
   print("done with discover")
 # Save discovered concept images (resized and original sized)
   ace_helpers.save_concepts(cd, discovered_concepts_dir)
+  all_objects = muppy.get_objects()
+  sum1 = summary.summarize(all_objects)
+  summary.print_(sum1)
+  print(asfd)
+  ############################################################################
   # Calculating CAVs and TCAV scores
   print("beginning to compute cavs")
   cav_accuraciess = cd.cavs(min_acc=0.0)
