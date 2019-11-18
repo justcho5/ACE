@@ -191,7 +191,7 @@ class ConceptDiscovery(object):
 
     self.discover_concepts(np_dataset, np_image_numbers, np_patches, method='KM', param_dicts={'n_clusters': 10})
     del np_dataset
-    del concept_image_numbers
+    del np_image_numbers
     del np_patches
 
     # del dataset

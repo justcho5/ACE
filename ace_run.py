@@ -55,7 +55,7 @@ def main(args):
       min_imgs=args.min_imgs,
       num_discovery_imgs=args.max_imgs,
       num_workers=args.num_parallel_workers)
-  # Creating the dataset of image patches
+  # Creating the dataset of image patches and discover concepts
   cd.create_patches(param_dict={'n_segments': [15, 50, 80]})
   # Saving the concept discovery target class images
   image_dir = os.path.join(discovered_concepts_dir, 'images')
@@ -63,12 +63,12 @@ def main(args):
   ace_helpers.save_images(image_dir,
                             (cd.discovery_images * 256).astype(np.uint8))
 
-  # Discovering Concepts
-  cd.discover_concepts(method='KM', param_dicts={'n_clusters': 10})
-  del cd.dataset  # Free memory
-  del cd.image_numbers
-  del cd.patches
-  
+  # # Discovering Concepts
+  # cd.discover_concepts(method='KM', param_dicts={'n_clusters': 10})
+  # del cd.dataset  # Free memory
+  # del cd.image_numbers
+  # del cd.patches
+  #
 
 
 
