@@ -181,9 +181,19 @@ class ConceptDiscovery(object):
     self.dataset = np.array(dataset, dtype=np.float16)
     self.image_numbers = np.array(image_numbers, dtype=np.int16)
     self.patches = np.array(patches, dtype=np.float16)
+
     all_objects = muppy.get_objects()
     sum1 = summary.summarize(all_objects)
     summary.print_(sum1)
+    del dataset
+    del self.dataset
+
+
+
+    all_objects = muppy.get_objects()
+    sum1 = summary.summarize(all_objects)
+    summary.print_(sum1)
+    print(asfd)
     # self.dataset, self.image_numbers, self.patches =\
     # np.array(dataset), np.array(image_numbers), np.array(patches)
     print("end of np loading")

@@ -68,10 +68,7 @@ def main(args):
   del cd.dataset  # Free memory
   del cd.image_numbers
   del cd.patches
-  all_objects = muppy.get_objects()
-  sum1 = summary.summarize(all_objects)
-  summary.print_(sum1)
-  print(asfd)
+  
 
 
 
