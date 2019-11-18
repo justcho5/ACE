@@ -306,7 +306,7 @@ def plot_concepts(cd, bn, num=10, address=None, mode='diverse', concepts=None):
     idxs = idxs[:num]
 
     for i, idx in enumerate(idxs):
-      print(idx)
+      print("plotting")
       ax = plt.Subplot(fig, inner[i])
       ax.imshow(concept_images[idx].astype(np.float32))
       ax.set_xticks([])

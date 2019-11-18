@@ -72,6 +72,7 @@ def main(args):
   # Calculating CAVs and TCAV scores
   print("beginning to compute cavs")
   cav_accuraciess = cd.cavs(min_acc=0.0)
+  print("compute tcav")
   scores = cd.tcavs(test=False)
   ace_helpers.save_ace_report(cd, cav_accuraciess, scores,
                                  results_summaries_dir + 'ace_results.txt')

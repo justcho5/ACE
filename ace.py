@@ -112,7 +112,6 @@ class ConceptDiscovery(object):
       Images of the desired concept or class.
     """
     concept_dir = os.path.join(self.source_dir, concept)
-    print(concept_dir)
     img_paths = [
         os.path.join(concept_dir, d)
         for d in tf.gfile.ListDirectory(concept_dir)
@@ -171,8 +170,6 @@ class ConceptDiscovery(object):
         
         image_superpixels, image_patches = self._return_superpixels(
             img, method, param_dict)
-        print(len(image_superpixels))
-        print(len(image_patches))
         for superpixel, patch in zip(image_superpixels, image_patches):
           dataset.append(superpixel)
           patches.append(patch)
@@ -188,7 +185,7 @@ class ConceptDiscovery(object):
     del patches
     # self.dataset, self.image_numbers, self.patches =\
     # np.array(dataset), np.array(image_numbers), np.array(patches)
-
+    print("end of np loading")
 
   def _return_superpixels(self, img, method='slic',
                           param_dict=None):
@@ -541,7 +538,7 @@ class ConceptDiscovery(object):
     """
     if randoms is None:
       randoms = [
-          'random500_{}'.format(i) for i in np.arange(self.num_random_exp)
+          'random50_{}'.format(i) for i in np.arange(self.num_random_exp)
       ]
     if self.num_workers:
       pool = multiprocessing.Pool(20)
