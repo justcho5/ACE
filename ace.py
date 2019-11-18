@@ -183,15 +183,15 @@ class ConceptDiscovery(object):
     np_patches = np.array(patches, dtype=np.float16)
 
     #
-    # all_objects = muppy.get_objects()
-    # sum1 = summary.summarize(all_objects)
-    # summary.print_(sum1)
+    all_objects = muppy.get_objects()
+    sum1 = summary.summarize(all_objects)
+    summary.print_(sum1)
 
 
 
     self.discover_concepts(np_dataset, np_image_numbers, np_patches, method='KM', param_dicts={'n_clusters': 10})
     return discovery_images
-
+    
     # self.dataset, self.image_numbers, self.patches =\
     # np.array(dataset), np.array(image_numbers), np.array(patches)
     print("end of np loading")

@@ -58,7 +58,9 @@ def main(args):
   # Creating the dataset of image patches and discover concepts
   # returns concept discovery target class images
   discovery_images = cd.create_patches(param_dict={'n_segments': [15, 50, 80]})
-
+  all_objects = muppy.get_objects()
+  sum1 = summary.summarize(all_objects)
+  summary.print_(sum1)
   # Saving the concept discovery target class images
   image_dir = os.path.join(discovered_concepts_dir, 'images')
   tf.gfile.MakeDirs(image_dir)
