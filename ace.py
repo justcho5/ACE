@@ -198,7 +198,7 @@ class ConceptDiscovery(object):
     del image_patches
 
     print("discover concepts done")
-    print(asdf)
+    
     return discovery_images
 
     # self.dataset, self.image_numbers, self.patches =\

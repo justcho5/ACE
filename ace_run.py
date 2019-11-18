@@ -66,6 +66,8 @@ def main(args):
   ace_helpers.save_images(image_dir,
                             (discovery_images * 256).astype(np.uint8))
 
+
+  print(asdf)
   # # Discovering Concepts
   # cd.discover_concepts(method='KM', param_dicts={'n_clusters': 10})
   # del cd.dataset  # Free memory
