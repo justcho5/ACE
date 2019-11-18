@@ -155,7 +155,6 @@ class ConceptDiscovery(object):
         del raw_imgs
     else:
       discovery_images = discovery_images
-      del discovery_images
     if self.num_workers:
       pool = multiprocessing.Pool(self.num_workers)
       outputs = pool.map(
@@ -189,9 +188,9 @@ class ConceptDiscovery(object):
 
 
 
-    self.discover_concepts(np_dataset, np_image_numbers, np_patches, method='KM', param_dicts={'n_clusters': 10})
+    self.discover_concepts(np_dataset, np_image_numbers, np_patches, discovery_images, method='KM', param_dicts={'n_clusters': 10})
     return discovery_images
-    
+
     # self.dataset, self.image_numbers, self.patches =\
     # np.array(dataset), np.array(image_numbers), np.array(patches)
     print("end of np loading")
@@ -410,6 +409,7 @@ class ConceptDiscovery(object):
                         dataset,
                         image_numbers,
                         patches,
+                        discovery_images,
                         method='KM',
                         activations=None,
                         param_dicts=None,
@@ -454,7 +454,7 @@ class ConceptDiscovery(object):
           concept_costs = bn_dic['cost'][label_idxs]
           concept_idxs = label_idxs[np.argsort(concept_costs)[:self.max_imgs]]
           concept_image_numbers = set(image_numbers[label_idxs])
-          discovery_size = len(self.discovery_images)
+          discovery_size = len(discovery_images)
           highly_common_concept = len(
               concept_image_numbers) > 0.5 * len(label_idxs)
           mildly_common_concept = len(
