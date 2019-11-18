@@ -19,7 +19,7 @@ from tcav import cav
 from ace_helpers import *
 
 from pympler import muppy, summary
-
+import gc
 class ConceptDiscovery(object):
   """Discovering and testing concepts of a class.
 
@@ -159,6 +159,7 @@ class ConceptDiscovery(object):
       outputs = pool.map(
           lambda img: self._return_superpixels(img, method, param_dict),
           discovery_images)
+      gc.collect() # Free memory
       for fn, sp_outputs in enumerate(outputs):
         image_superpixels, image_patches = sp_outputs
         for superpixel, patch in zip(image_superpixels, image_patches):
@@ -176,10 +177,16 @@ class ConceptDiscovery(object):
           patches.append(patch)
           image_numbers.append(fn)
     print("starting np loading")
+    del image_superpixels
+    del image_patches
+    gc.collect() # Free Memory
     np_dataset = np.array(dataset, dtype=np.float16)
     np_image_numbers = np.array(image_numbers, dtype=np.int16)
     np_patches = np.array(patches, dtype=np.float16)
-
+    del dataset
+    del patches
+    del image_numbers
+    gc.collect() # Free Memory
     #
     # all_objects = muppy.get_objects()
     # sum1 = summary.summarize(all_objects)
@@ -191,14 +198,10 @@ class ConceptDiscovery(object):
     del np_dataset
     del np_image_numbers
     del np_patches
-    del dataset
-    del patches
-    del image_numbers
-    del image_superpixels
-    del image_patches
+    gc.collect() # Free Memory
 
     print("discover concepts done")
-    
+
     return discovery_images
 
     # self.dataset, self.image_numbers, self.patches =\
