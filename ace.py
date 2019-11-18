@@ -189,7 +189,7 @@ class ConceptDiscovery(object):
 
 
 
-    self.discover_concepts(method='KM', param_dicts={'n_clusters': 10}, np_dataset, np_image_numbers, np_patches)
+    self.discover_concepts(np_dataset, np_image_numbers, np_patches, method='KM', param_dicts={'n_clusters': 10})
     del np_dataset
     del concept_image_numbers
     del np_patches
@@ -418,12 +418,13 @@ class ConceptDiscovery(object):
     return asg, cost, centers
 
   def discover_concepts(self,
+                        dataset,
+                        image_numbers,
+                        patches,
                         method='KM',
                         activations=None,
                         param_dicts=None,
-                        dataset,
-                        image_numbers,
-                        patches):
+                        ):
     """Discovers the frequent occurring concepts in the target class.
 
       Calculates self.dic, a dicationary containing all the informations of the
