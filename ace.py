@@ -178,18 +178,27 @@ class ConceptDiscovery(object):
           patches.append(patch)
           image_numbers.append(fn)
     print("starting np loading")
-    self.dataset = np.array(dataset, dtype=np.float16)
-    self.image_numbers = np.array(image_numbers, dtype=np.int16)
-    self.patches = np.array(patches, dtype=np.float16)
+    np_dataset = np.array(dataset, dtype=np.float16)
+    np_image_numbers = np.array(image_numbers, dtype=np.int16)
+    np_patches = np.array(patches, dtype=np.float16)
+
 
     all_objects = muppy.get_objects()
     sum1 = summary.summarize(all_objects)
     summary.print_(sum1)
-    del dataset
-    del self.dataset
 
 
 
+    self.discover_concepts(method='KM', param_dicts={'n_clusters': 10}, np_dataset, np_image_numbers, np_patches)
+    del np_dataset
+    del concept_image_numbers
+    del np_patches
+
+    # del dataset
+    # del self.dataset
+    #
+    #
+    #
     all_objects = muppy.get_objects()
     sum1 = summary.summarize(all_objects)
     summary.print_(sum1)
@@ -411,7 +420,10 @@ class ConceptDiscovery(object):
   def discover_concepts(self,
                         method='KM',
                         activations=None,
-                        param_dicts=None):
+                        param_dicts=None,
+                        dataset,
+                        image_numbers,
+                        patches):
     """Discovers the frequent occurring concepts in the target class.
 
       Calculates self.dic, a dicationary containing all the informations of the
@@ -440,7 +452,7 @@ class ConceptDiscovery(object):
     for bn in self.bottlenecks:
       bn_dic = {}
       if activations is None or bn not in activations.keys():
-        bn_activations = self._patch_activations(self.dataset, bn)
+        bn_activations = self._patch_activations(dataset, bn)
       else:
         bn_activations = activations[bn]
       bn_dic['label'], bn_dic['cost'], centers = self._cluster(
@@ -451,7 +463,7 @@ class ConceptDiscovery(object):
         if len(label_idxs) > self.min_imgs:
           concept_costs = bn_dic['cost'][label_idxs]
           concept_idxs = label_idxs[np.argsort(concept_costs)[:self.max_imgs]]
-          concept_image_numbers = set(self.image_numbers[label_idxs])
+          concept_image_numbers = set(image_numbers[label_idxs])
           discovery_size = len(self.discovery_images)
           highly_common_concept = len(
               concept_image_numbers) > 0.5 * len(label_idxs)
@@ -470,9 +482,9 @@ class ConceptDiscovery(object):
             concept = '{}_concept{}'.format(self.target_class, concept_number)
             bn_dic['concepts'].append(concept)
             bn_dic[concept] = {
-                'images': self.dataset[concept_idxs],
-                'patches': self.patches[concept_idxs],
-                'image_numbers': self.image_numbers[concept_idxs]
+                'images': dataset[concept_idxs],
+                'patches': patches[concept_idxs],
+                'image_numbers': image_numbers[concept_idxs]
             }
             bn_dic[concept + '_center'] = centers[i]
       bn_dic.pop('label', None)
