@@ -1,5 +1,4 @@
 """This script runs the whole ACE method."""
-from pympler import muppy, summary
 
 
 import sys
@@ -71,10 +70,7 @@ def main(args):
   print("done with discover")
 # Save discovered concept images (resized and original sized)
   ace_helpers.save_concepts(cd, discovered_concepts_dir)
-  all_objects = muppy.get_objects()
-  sum1 = summary.summarize(all_objects)
-  summary.print_(sum1)
-  print(asfd)
+
   ############################################################################
   # Calculating CAVs and TCAV scores
   print("beginning to compute cavs")

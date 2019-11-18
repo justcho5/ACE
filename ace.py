@@ -18,6 +18,7 @@ import tensorflow as tf
 from tcav import cav
 from ace_helpers import *
 
+from pympler import muppy, summary
 
 class ConceptDiscovery(object):
   """Discovering and testing concepts of a class.
@@ -177,14 +178,13 @@ class ConceptDiscovery(object):
           patches.append(patch)
           image_numbers.append(fn)
     print("starting np loading")
-    del image_superpixels
-    del image_patches
     self.dataset = np.array(dataset, dtype=np.float16)
-    del dataset
     self.image_numbers = np.array(image_numbers, dtype=np.int16)
-    del image_numbers
     self.patches = np.array(patches, dtype=np.float16)
-    del patches
+    all_objects = muppy.get_objects()
+    sum1 = summary.summarize(all_objects)
+    summary.print_(sum1)
+    print(asfd)
     # self.dataset, self.image_numbers, self.patches =\
     # np.array(dataset), np.array(image_numbers), np.array(patches)
     print("end of np loading")
