@@ -151,7 +151,7 @@ class ConceptDiscovery(object):
     if discovery_images is None:
         print("target class images")
         discovery_images = self.load_concept_imgs(self.target_class, self.num_discovery_imgs)
-        
+
     else:
       discovery_images = discovery_images
     if self.num_workers:
@@ -188,6 +188,17 @@ class ConceptDiscovery(object):
 
     print("end of np loading")
     self.discover_concepts(np_dataset, np_image_numbers, np_patches, discovery_images, method='KM', param_dicts={'n_clusters': 10})
+    del np_dataset
+    del np_image_numbers
+    del np_patches
+    del dataset
+    del patches
+    del image_numbers
+    del image_superpixels
+    del image_patches
+
+    print("discover concepts done")
+    print(asdf)
     return discovery_images
 
     # self.dataset, self.image_numbers, self.patches =\
