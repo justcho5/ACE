@@ -184,7 +184,6 @@ class ConceptDiscovery(object):
     all_objects = muppy.get_objects()
     sum1 = summary.summarize(all_objects)
     summary.print_(sum1)
-    print(asfd)
     # self.dataset, self.image_numbers, self.patches =\
     # np.array(dataset), np.array(image_numbers), np.array(patches)
     print("end of np loading")

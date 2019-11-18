@@ -14,6 +14,7 @@ import tensorflow as tf
 import ace_helpers
 from ace import ConceptDiscovery
 import argparse
+from pympler import muppy, summary
 
 
 def main(args):
@@ -67,6 +68,13 @@ def main(args):
   del cd.dataset  # Free memory
   del cd.image_numbers
   del cd.patches
+  all_objects = muppy.get_objects()
+  sum1 = summary.summarize(all_objects)
+  summary.print_(sum1)
+  print(asfd)
+
+
+
   print("done with discover")
 # Save discovered concept images (resized and original sized)
   ace_helpers.save_concepts(cd, discovered_concepts_dir)
