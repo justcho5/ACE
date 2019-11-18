@@ -56,12 +56,14 @@ def main(args):
       num_discovery_imgs=args.max_imgs,
       num_workers=args.num_parallel_workers)
   # Creating the dataset of image patches and discover concepts
-  cd.create_patches(param_dict={'n_segments': [15, 50, 80]})
+  # returns concept discovery target class images
+  discovery_images = cd.create_patches(param_dict={'n_segments': [15, 50, 80]})
+
   # Saving the concept discovery target class images
   image_dir = os.path.join(discovered_concepts_dir, 'images')
   tf.gfile.MakeDirs(image_dir)
   ace_helpers.save_images(image_dir,
-                            (cd.discovery_images * 256).astype(np.uint8))
+                            (discovery_images * 256).astype(np.uint8))
 
   # # Discovering Concepts
   # cd.discover_concepts(method='KM', param_dicts={'n_clusters': 10})
@@ -79,7 +81,7 @@ def main(args):
   ############################################################################
   # Calculating CAVs and TCAV scores
   print("beginning to compute cavs")
-  cav_accuraciess = cd.cavs(min_acc=0.0)
+  cav_accuraciess = cd.cavs(discovery_images, min_acc=0.0)
   print("compute tcav")
   scores = cd.tcavs(test=False)
   ace_helpers.save_ace_report(cd, cav_accuraciess, scores,

@@ -151,16 +151,16 @@ class ConceptDiscovery(object):
     if discovery_images is None:
         print("target class images")
         raw_imgs = self.load_concept_imgs(self.target_class, self.num_discovery_imgs)
-        self.discovery_images = raw_imgs
+        discovery_images = raw_imgs
         del raw_imgs
     else:
-      self.discovery_images = discovery_images
+      discovery_images = discovery_images
       del discovery_images
     if self.num_workers:
       pool = multiprocessing.Pool(self.num_workers)
       outputs = pool.map(
           lambda img: self._return_superpixels(img, method, param_dict),
-          self.discovery_images)
+          discovery_images)
       for fn, sp_outputs in enumerate(outputs):
         image_superpixels, image_patches = sp_outputs
         for superpixel, patch in zip(image_superpixels, image_patches):
@@ -168,8 +168,8 @@ class ConceptDiscovery(object):
           patches.append(patch)
           image_numbers.append(fn)
     else:
-      print("num images: {}".format(len(self.discovery_images)))
-      for fn, img in enumerate(self.discovery_images):
+      print("num images: {}".format(len(discovery_images)))
+      for fn, img in enumerate(discovery_images):
 
         image_superpixels, image_patches = self._return_superpixels(
             img, method, param_dict)
@@ -182,27 +182,16 @@ class ConceptDiscovery(object):
     np_image_numbers = np.array(image_numbers, dtype=np.int16)
     np_patches = np.array(patches, dtype=np.float16)
 
-
-    all_objects = muppy.get_objects()
-    sum1 = summary.summarize(all_objects)
-    summary.print_(sum1)
+    #
+    # all_objects = muppy.get_objects()
+    # sum1 = summary.summarize(all_objects)
+    # summary.print_(sum1)
 
 
 
     self.discover_concepts(np_dataset, np_image_numbers, np_patches, method='KM', param_dicts={'n_clusters': 10})
-    del np_dataset
-    del np_image_numbers
-    del np_patches
+    return discovery_images
 
-    # del dataset
-    # del self.dataset
-    #
-    #
-    #
-    all_objects = muppy.get_objects()
-    sum1 = summary.summarize(all_objects)
-    summary.print_(sum1)
-    print(asfd)
     # self.dataset, self.image_numbers, self.patches =\
     # np.array(dataset), np.array(image_numbers), np.array(patches)
     print("end of np loading")
@@ -575,7 +564,7 @@ class ConceptDiscovery(object):
         accs.append(self._calculate_cav(concept, rnd, bn, activations, ow))
     return accs
 
-  def cavs(self, min_acc=0., ow=True):
+  def cavs(self, discovery_images, min_acc=0., ow=True):
     """Calculates cavs for all discovered concepts.
 
     This method calculates and saves CAVs for all the discovered concepts
@@ -601,7 +590,7 @@ class ConceptDiscovery(object):
         if np.mean(acc[bn][concept]) < min_acc:
           concepts_to_delete.append((bn, concept))
       target_class_acts = get_acts_from_images(
-          self.discovery_images, self.model, bn)
+          discovery_images, self.model, bn)
       acc[bn][self.target_class] = self._concept_cavs(
           bn, self.target_class, target_class_acts, ow=ow)
       rnd_acts = self._random_concept_activations(bn, self.random_concept)
