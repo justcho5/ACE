@@ -482,7 +482,7 @@ class ConceptDiscovery(object):
             bn_dic['concepts'].append(concept)
             np.save(os.path.join(self.np_dir, "{}_images.npy".format(concept)), np.load(os.path.join(self.np_dir,"dataset.npy"))[concept_idxs])
             np.save(os.path.join(self.np_dir, "{}_patches.npy".format(concept)), np.load(os.path.join(self.np_dir,"patches.npy"))[concept_idxs])
-            np.save(os.path.join(self.np_dir, "{}_image_numbers.npy".format(concept)), np.load(os.path.join(self.np_dir,"image_numbers"))[concept_idxs])
+            np.save(os.path.join(self.np_dir, "{}_image_numbers.npy".format(concept)), np.load(os.path.join(self.np_dir,"image_numbers.npy"))[concept_idxs])
 
             # bn_dic[concept] = {
             #     'images': dataset[concept_idxs],
