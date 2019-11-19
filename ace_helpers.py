@@ -305,9 +305,9 @@ def plot_concepts(cd, bn,num=10, address=None, mode='diverse', concepts=None):
   for n, concept in enumerate(concepts):
     inner = gridspec.GridSpecFromSubplotSpec(
         2, num, subplot_spec=outer[n], wspace=0, hspace=0.1)
-    concept_images=np.load(os.path.join(cd.np_dir,"{}_images".format(concept)))
-    concept_patches=np.load(os.path.join(cd.np_dir,"{}_patches".format(concept)))
-    concept_image_numbers=np.load(os.path.join(cd.np_dir,"{}_image_numbers".format(concept)))
+    concept_images=np.load(os.path.join(cd.np_dir,"{}_images.npy".format(concept)))
+    concept_patches=np.load(os.path.join(cd.np_dir,"{}_patches.npy".format(concept)))
+    concept_image_numbers=np.load(os.path.join(cd.np_dir,"{}_image_numbers.npy".format(concept)))
 
 
     # concept_images = cd.dic[bn][concept]['images']

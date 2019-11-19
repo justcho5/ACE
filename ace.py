@@ -182,18 +182,11 @@ class ConceptDiscovery(object):
           patches.append(patch)
           image_numbers.append(fn)
     print("starting np loading")
-    del image_superpixels
-    del image_patches
-    gc.collect() # Free Memory
     np_dataset = np.array(dataset, dtype=np.float16)
-    del dataset
-    gc.collect() # Free Memory
     np_image_numbers = np.array(image_numbers, dtype=np.int16)
     np_patches = np.array(patches, dtype=np.float16)
 
-    del patches
-    del image_numbers
-    gc.collect() # Free Memory
+
     #
     # all_objects = muppy.get_objects()
     # sum1 = summary.summarize(all_objects)
