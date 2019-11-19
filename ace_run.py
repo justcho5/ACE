@@ -67,7 +67,7 @@ def main(args):
   image_dir = os.path.join(discovered_concepts_dir, 'images')
   tf.gfile.MakeDirs(image_dir)
   ace_helpers.save_images(image_dir,
-                            (np.load(os.path.join(self.np_dir,"discovery_images.npy")) * 256).astype(np.uint8))
+                            (np.load(os.path.join(np_dir,"discovery_images.npy")) * 256).astype(np.uint8))
 
 
   # # Discovering Concepts
