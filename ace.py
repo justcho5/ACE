@@ -153,10 +153,10 @@ class ConceptDiscovery(object):
     if discovery_images is None:
         print("target class images")
         discovery_images = self.load_concept_imgs(self.target_class, self.num_discovery_imgs)
-        np.save("discovery_images.npy", discovery_images)
+        np.save(os.path.join(self.np_dir,"discovery_images.npy"), discovery_images)
 
     else:
-      np.save("discovery_images.npy", discovery_images)
+      np.save(os.path.join(self.np_dir,"discovery_images.npy"), discovery_images)
 
     if self.num_workers:
       pool = multiprocessing.Pool(self.num_workers)
@@ -182,9 +182,13 @@ class ConceptDiscovery(object):
           patches.append(patch)
           image_numbers.append(fn)
     print("starting np loading")
-    np_dataset = np.array(dataset, dtype=np.float16)
-    np_image_numbers = np.array(image_numbers, dtype=np.int16)
-    np_patches = np.array(patches, dtype=np.float16)
+    np.save(os.path.join(self.np_dir, "dataset.npy"),np.array(dataset, dtype=np.float16))
+    np.save(os.path.join(self.np_dir, "image_numbers.npy"),np.array(image_numbers, dtype=np.int16))
+    np.save(os.path.join(self.np_dir, "patches.npy"),np.array(patches, dtype=np.float16))
+    # np_dataset = np.array(dataset, dtype=np.float16)
+    # np_image_numbers = np.array(image_numbers, dtype=np.int16)
+    # np_patches = np.array(patches, dtype=np.float16)
+
 
 
     #
@@ -194,7 +198,7 @@ class ConceptDiscovery(object):
 
 
     print("end of np loading")
-    self.discover_concepts(np_dataset, np_image_numbers, np_patches, discovery_images, method='KM', param_dicts={'n_clusters': 10})
+    self.discover_concepts(len(discovery_images), method='KM', param_dicts={'n_clusters': 10})
     del np_dataset
     del np_image_numbers
     del np_patches
@@ -418,10 +422,7 @@ class ConceptDiscovery(object):
     return asg, cost, centers
 
   def discover_concepts(self,
-                        dataset,
-                        image_numbers,
-                        patches,
-                        discovery_images,
+                        discovery_size,
                         method='KM',
                         activations=None,
                         param_dicts=None,
@@ -454,7 +455,7 @@ class ConceptDiscovery(object):
     for bn in self.bottlenecks:
       bn_dic = {}
       if activations is None or bn not in activations.keys():
-        bn_activations = self._patch_activations(dataset, bn)
+        bn_activations = self._patch_activations(np.load(os.path.join(self.np_dir,"dataset.npy")), bn)
       else:
         bn_activations = activations[bn]
       bn_dic['label'], bn_dic['cost'], centers = self._cluster(
@@ -466,7 +467,6 @@ class ConceptDiscovery(object):
           concept_costs = bn_dic['cost'][label_idxs]
           concept_idxs = label_idxs[np.argsort(concept_costs)[:self.max_imgs]]
           concept_image_numbers = set(image_numbers[label_idxs])
-          discovery_size = len(discovery_images)
           highly_common_concept = len(
               concept_image_numbers) > 0.5 * len(label_idxs)
           mildly_common_concept = len(
@@ -483,9 +483,9 @@ class ConceptDiscovery(object):
             concept_number += 1
             concept = '{}_concept{}'.format(self.target_class, concept_number)
             bn_dic['concepts'].append(concept)
-            np.save(os.path.join(self.np_dir, "{}_images.npy".format(concept)), dataset[concept_idxs])
-            np.save(os.path.join(self.np_dir, "{}_patches.npy".format(concept)), patches[concept_idxs])
-            np.save(os.path.join(self.np_dir, "{}_image_numbers.npy".format(concept)), image_numbers[concept_idxs])
+            np.save(os.path.join(self.np_dir, "{}_images.npy".format(concept)), np.load(os.path.join(self.np_dir,"dataset.npy"))[concept_idxs])
+            np.save(os.path.join(self.np_dir, "{}_patches.npy".format(concept)), np.load(os.path.join(self.np_dir,"patches.npy"))[concept_idxs])
+            np.save(os.path.join(self.np_dir, "{}_image_numbers.npy".format(concept)), np.load(os.path.join(self.np_dir,"image_numbers"))[concept_idxs])
 
             # bn_dic[concept] = {
             #     'images': dataset[concept_idxs],
@@ -607,7 +607,7 @@ class ConceptDiscovery(object):
         if np.mean(acc[bn][concept]) < min_acc:
           concepts_to_delete.append((bn, concept))
       target_class_acts = get_acts_from_images(
-          np.load("discovery_images.npy"), self.model, bn)
+          np.load(os.path.join(self.np_dir,"discovery_images.npy")), self.model, bn)
       acc[bn][self.target_class] = self._concept_cavs(
           bn, self.target_class, target_class_acts, ow=ow)
       rnd_acts = self._random_concept_activations(bn, self.random_concept)
