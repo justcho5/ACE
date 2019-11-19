@@ -332,7 +332,6 @@ def plot_concepts(cd, bn,num=10, address=None, mode='diverse', concepts=None):
     idxs = idxs[:num]
 
     for i, idx in enumerate(idxs):
-      print("plotting")
       ax = plt.Subplot(fig, inner[i])
       ax.imshow(concept_images[idx].astype(np.float32))
       ax.set_xticks([])
@@ -344,7 +343,6 @@ def plot_concepts(cd, bn,num=10, address=None, mode='diverse', concepts=None):
       ax = plt.Subplot(fig, inner[i + num])
       mask = 1 - (np.mean(concept_patches[idx].astype(np.float32) == float(
           cd.average_image_value) / 255, -1) == 1)
-      print(concept_image_numbers[idx])
       image = (np.load(os.path.join(cd.np_dir,"discovery_images.npy")))[concept_image_numbers[idx]]
       ax.imshow(mark_boundaries(image, mask, color=(1, 1, 0), mode='thick'))
       ax.set_xticks([])
