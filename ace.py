@@ -175,7 +175,6 @@ class ConceptDiscovery(object):
         print(fn)
         image_superpixels, image_patches = self._return_superpixels(
             img, method, param_dict)
-        gc.collect() # Free memory
 
         for superpixel, patch in zip(image_superpixels, image_patches):
           dataset.append(superpixel)
@@ -185,6 +184,7 @@ class ConceptDiscovery(object):
     np.save(os.path.join(self.np_dir, "dataset.npy"),np.array(dataset, dtype=np.float16))
     np.save(os.path.join(self.np_dir, "image_numbers.npy"),np.array(image_numbers, dtype=np.int16))
     np.save(os.path.join(self.np_dir, "patches.npy"),np.array(patches, dtype=np.float16))
+    self.discovery_size=len(discovery_images)
     # np_dataset = np.array(dataset, dtype=np.float16)
     # np_image_numbers = np.array(image_numbers, dtype=np.int16)
     # np_patches = np.array(patches, dtype=np.float16)
@@ -198,11 +198,8 @@ class ConceptDiscovery(object):
 
 
     print("end of np loading")
-    self.discover_concepts(len(discovery_images), method='KM', param_dicts={'n_clusters': 10})
-    del np_dataset
-    del np_image_numbers
-    del np_patches
-    gc.collect() # Free Memory
+
+
 
     print("discover concepts done")
 
@@ -422,7 +419,6 @@ class ConceptDiscovery(object):
     return asg, cost, centers
 
   def discover_concepts(self,
-                        discovery_size,
                         method='KM',
                         activations=None,
                         param_dicts=None,
@@ -466,7 +462,8 @@ class ConceptDiscovery(object):
         if len(label_idxs) > self.min_imgs:
           concept_costs = bn_dic['cost'][label_idxs]
           concept_idxs = label_idxs[np.argsort(concept_costs)[:self.max_imgs]]
-          concept_image_numbers = set(image_numbers[label_idxs])
+          concept_image_numbers = set(np.load(os.path.join(self.np_dir,"image_numbers.npy"))[label_idxs])
+          discovery_size=self.discovery_size
           highly_common_concept = len(
               concept_image_numbers) > 0.5 * len(label_idxs)
           mildly_common_concept = len(
