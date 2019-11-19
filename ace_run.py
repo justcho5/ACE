@@ -25,6 +25,7 @@ def main(args):
   results_dir = os.path.join(args.working_dir, 'results/')
   cavs_dir = os.path.join(args.working_dir, 'cavs/')
   activations_dir = os.path.join(args.working_dir, 'acts/')
+  np_dir = os.path.join(args.working_dir, 'np/')
   results_summaries_dir = os.path.join(args.working_dir, 'results_summaries/')
   # print(args.working_dir)
   if tf.gfile.Exists(args.working_dir):
@@ -35,6 +36,7 @@ def main(args):
   tf.gfile.MakeDirs(cavs_dir)
   tf.gfile.MakeDirs(activations_dir)
   tf.gfile.MakeDirs(results_summaries_dir)
+  tf.gfile.MakeDirs(np_dir)
   random_concept = 'random_discovery'  # Random concept for statistical testing
   sess = utils.create_session()
   print(args.model_to_run)
@@ -50,6 +52,7 @@ def main(args):
       args.source_dir,
       activations_dir,
       cavs_dir,
+      np_dir,
       num_random_exp=args.num_random_exp,
       channel_mean=True,
       max_imgs=args.max_imgs,
@@ -58,13 +61,13 @@ def main(args):
       num_workers=args.num_parallel_workers)
   # Creating the dataset of image patches and discover concepts
   # returns concept discovery target class images
-  discovery_images = cd.create_patches(param_dict={'n_segments': [15, 50, 80]})
+  cd.create_patches(param_dict={'n_segments': [15, 50, 80]})
 
   # Saving the concept discovery target class images
   image_dir = os.path.join(discovered_concepts_dir, 'images')
   tf.gfile.MakeDirs(image_dir)
   ace_helpers.save_images(image_dir,
-                            (discovery_images * 256).astype(np.uint8))
+                            (np.load("discovery_images.npy") * 256).astype(np.uint8))
 
 
   # # Discovering Concepts
@@ -75,7 +78,6 @@ def main(args):
   #
 
 
-  print(getsizeof(discovery_images))
   print("done with discover")
 # Save discovered concept images (resized and original sized)
   ace_helpers.save_concepts(cd, discovered_concepts_dir)
@@ -83,14 +85,14 @@ def main(args):
   ############################################################################
   # Calculating CAVs and TCAV scores
   print("beginning to compute cavs")
-  cav_accuraciess = cd.cavs(discovery_images, min_acc=0.0)
+  cav_accuraciess = cd.cavs(min_acc=0.0)
   print("compute tcav")
   scores = cd.tcavs(test=False)
   ace_helpers.save_ace_report(cd, cav_accuraciess, scores,
                                  results_summaries_dir + 'ace_results.txt')
   # Plot examples of discovered concepts
   for bn in cd.bottlenecks:
-    ace_helpers.plot_concepts(cd, bn, discovery_images, 10, address=results_dir)
+    ace_helpers.plot_concepts(cd, bn, 10, address=results_dir)
   # Delete concepts that don't pass statistical testing
   cd.test_and_remove_concepts(scores)
 

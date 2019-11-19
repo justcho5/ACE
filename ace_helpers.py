@@ -15,6 +15,27 @@ sys.path.append("~/Documents/EPFL/thesis/project/hnsc/tcav/")
 sys.path.append("/home/hjcho/projects/tcav")
 import tcav.model as model
 
+import pickle
+
+def npsave(file, object):
+    # type is images, patches, or image_numbers
+    np.save("{}.npy".format(file), object)
+
+def npload(file):
+    # type is images, patches, or image_numbers
+    return np.load("{}.npy".format(file))
+# write python dict to a file
+def save_pkl(filename, dict):
+    output = open('{}.pkl'.format(filename), 'wb')
+    pickle.dump(dict, output)
+    output.close()
+
+# read python dict back from the file
+def load_pkl(filename):
+    pkl_file = open('{}.pkl'.format(filename), 'rb')
+    dict = pickle.load(pkl_file)
+    pkl_file.close()
+    return dict
 
 def make_model(sess, model_to_run, model_path,
 labels_path, randomize=False,):
@@ -255,7 +276,7 @@ def binary_dataset(pos, neg, balanced=True):
   return x, y
 
 
-def plot_concepts(cd, bn, discovery_images,num=10, address=None, mode='diverse', concepts=None):
+def plot_concepts(cd, bn,num=10, address=None, mode='diverse', concepts=None):
   """Plots examples of discovered concepts.
 
   Args:
@@ -284,9 +305,14 @@ def plot_concepts(cd, bn, discovery_images,num=10, address=None, mode='diverse',
   for n, concept in enumerate(concepts):
     inner = gridspec.GridSpecFromSubplotSpec(
         2, num, subplot_spec=outer[n], wspace=0, hspace=0.1)
-    concept_images = cd.dic[bn][concept]['images']
-    concept_patches = cd.dic[bn][concept]['patches']
-    concept_image_numbers = cd.dic[bn][concept]['image_numbers']
+    concept_images=np.load(os.path.join(cd.np_dir,"{}_images".format(concept)))
+    concept_patches=np.load(os.path.join(cd.np_dir,"{}_patches".format(concept)))
+    concept_image_numbers=np.load(os.path.join(cd.np_dir,"{}_image_numbers".format(concept)))
+
+
+    # concept_images = cd.dic[bn][concept]['images']
+    # concept_patches = cd.dic[bn][concept]['patches']
+    # concept_image_numbers = cd.dic[bn][concept]['image_numbers']
     if mode == 'max':
       idxs = np.arange(len(concept_images))
     elif mode == 'random':
@@ -319,7 +345,7 @@ def plot_concepts(cd, bn, discovery_images,num=10, address=None, mode='diverse',
       mask = 1 - (np.mean(concept_patches[idx].astype(np.float32) == float(
           cd.average_image_value) / 255, -1) == 1)
       print(concept_image_numbers[idx])
-      image = discovery_images[concept_image_numbers[idx]]
+      image = (np.load("discovery_images.npy"))[concept_image_numbers[idx]]
       ax.imshow(mark_boundaries(image, mask, color=(1, 1, 0), mode='thick'))
       ax.set_xticks([])
       ax.set_yticks([])
@@ -454,13 +480,13 @@ def save_concepts(cd, concepts_dir):
     for concept in cd.dic[bn]['concepts']:
       patches_dir = os.path.join(concepts_dir, bn + '_' + concept + '_patches')
       images_dir = os.path.join(concepts_dir, bn + '_' + concept)
-      patches = (np.clip(cd.dic[bn][concept]['patches'], 0, 1) * 256).astype(
+      patches = (np.clip(np.load(os.path.join(cd.np_dir,"{}_patches".format(concept))), 0, 1) * 256).astype(
           np.uint8)
-      images = (np.clip(cd.dic[bn][concept]['images'], 0, 1) * 256).astype(
+      images = (np.clip(np.load(os.path.join(cd.np_dir,"{}_images".format(concept))), 0, 1) * 256).astype(
           np.uint8)
       tf.gfile.MakeDirs(patches_dir)
       tf.gfile.MakeDirs(images_dir)
-      image_numbers = cd.dic[bn][concept]['image_numbers']
+      image_numbers = np.load(os.path.join(cd.np_dir,"{}_image_numbers".format(concept)))
       image_addresses, patch_addresses = [], []
       for i in range(len(images)):
         image_name = '0' * int(np.ceil(2 - np.log10(i + 1))) + '{}_{}'.format(
