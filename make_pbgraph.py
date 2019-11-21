@@ -1,3 +1,5 @@
+import sys
+sys.path.append("/home/hjcho/projects/hnsc/histoXai/tcav")
 import tensorflow as tf
 from tensorflow.python.framework import graph_io
 from tensorflow.keras.applications.inception_v3 import InceptionV3
@@ -37,9 +39,9 @@ def convert_to_pb(h5_model_path, model_folder, pb_filename):
     freeze_graph(session.graph, session, [out.op.name for out in base_model.outputs], model_folder, pb_filename)
 
 def main():
-    h5_file = "/mnt/gpucluster/hnsc/slideflow_projects/hpv_224/models/HPV_status-hpv_224_inceptionv3-kfold3/trained_model.h5"
-    model_folder = "/mnt/gpucluster/hnsc/slideflow_projects/hpv_224/models/HPV_status-hpv_224_inceptionv3-kfold3/"
-    pb_filename = "hpv224_inceptionv3.pb"
+    h5_file = "/mnt/gpucluster/hnsc/slideflow_projects/hpv_224/models/HPV_status-hpv_224-kfold3/trained_model.h5"
+    model_folder = "/mnt/gpucluster/hnsc/slideflow_projects/hpv_224/models/HPV_status-hpv_224-kfold3/"
+    pb_filename = "hpv224_xception.pb"
     convert_to_pb(h5_file, model_folder, pb_filename)
 
 if __name__ == '__main__':

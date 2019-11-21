@@ -36,7 +36,7 @@ def sample(dir_list, num_random_images):
         for dir in tcga_dirs:
             sample_dir = os.path.join(tiles_dir, dir)
             for _,_,files in os.walk(sample_dir):
-                samples = random.sample(files, q))
+                samples = random.sample(files, q)
                 for sample in samples:
                     tiles.append(os.path.join(root,sample))
                 break
@@ -47,11 +47,11 @@ def sample(dir_list, num_random_images):
                 break
     return tiles
 
-def copy_rand_images(tiles_dir, num_random_images, annota_path = None, class = None)
+def copy_rand_images(tiles_dir, num_random_images, annota_path = None, category = None):
 
-    if class:
+    if category:
         df = pd.read_csv("annota_path")
-        df = df[df.HPV_status==class]
+        df = df[df.HPV_status==category]
         lst = df.slide.values.tolist()
         return sample(lst, num_random_images)
 
@@ -72,7 +72,8 @@ def main():
     tiles_dir = "/mnt/gpucluster/hnsc/slideflow_projects/hpv_224/tiles/"
     num_expts = 50
     num_random_images = 100
-    project_dir = os.path.join(tiles_dir, project_name)
+    project_dir = os.path.join("/home/hjcho/projects/hnsc/histoXai/", project_name)
+    print(project_dir)
     samples_dir = os.path.join(project_dir,"samples") # csv files for sampling random images
     source_dir = os.path.join(project_dir, "source_dir")
     pos_dir = os.path.join(source_dir, "positive")
@@ -91,9 +92,9 @@ def main():
             tf.gfile.Copy(tile, experiment_dir)
         if i ==num_expts:
             tf.gfile.Rename(experiment_dir, random_discovery)
-    for class in ["positive", "negative"]
-        tiles = copy_rand_images(tiles_dir, num_random_images, annota_path="/mnt/gpucluster/hnsc/slideflow_projects/hpv_224/tcga_hnsc_anns_n_slides.csv", class = class)
-        if class = "positive":
+    for category in ["positive", "negative"]:
+        tiles = copy_rand_images(tiles_dir, num_random_images, annota_path="/mnt/gpucluster/hnsc/slideflow_projects/hpv_224/tcga_hnsc_anns_n_slides.csv", category=category)
+        if category == "positive":
             for tile in tiles:
                 tf.gfile.Copy(tile, pos_dir)
         else:
