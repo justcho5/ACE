@@ -18,7 +18,7 @@ from os.path import isfile, join
 import random
 
 
-def sample(dir_list, num_random_images):
+def sample(tiles_nolabel_dir, dir_list, num_random_images):
     tiles = []
 
     if len(dir_list)>num_random_images:
@@ -51,7 +51,7 @@ def copy_rand_images(tiles_nolabel_dir, num_random_images, annota_path = None, c
         df = pd.read_csv("annota_path")
         df = df[df.HPV_status==category]
         lst = df.slide.values.tolist()
-        return sample(lst, num_random_images)
+        return sample(tiles_nolabel_dir,lst, num_random_images)
 
 
     else:
@@ -61,7 +61,7 @@ def copy_rand_images(tiles_nolabel_dir, num_random_images, annota_path = None, c
             q = num_random_images/len(tcga_dirs)
             r = num_random_images%len(tcga_dirs)
             break
-        return sample(tcga_dirs, num_random_images)
+        return sample(tiles_nolabel_dir,tcga_dirs, num_random_images)
 
 
 
