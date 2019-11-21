@@ -10,9 +10,7 @@ import tcav.utils as utils
 import tensorflow as tf
 
 import ace_helpers
-from ace import ConceptDiscovery
 import argparse
-from pympler import muppy, summary
 import pandas as pd
 
 from os import listdir
@@ -72,8 +70,7 @@ def main():
     tiles_dir = "/mnt/gpucluster/hnsc/slideflow_projects/hpv_224/tiles/"
     num_expts = 50
     num_random_images = 100
-    project_dir = os.path.join("/home/hjcho/projects/hnsc/histoXai/", project_name)
-    print(project_dir)
+    project_dir = os.path.join(tiles_dir, project_name)
     samples_dir = os.path.join(project_dir,"samples") # csv files for sampling random images
     source_dir = os.path.join(project_dir, "source_dir")
     pos_dir = os.path.join(source_dir, "positive")
@@ -101,5 +98,5 @@ def main():
             for tile in tiles:
                 tf.gfile.Copy(tile,neg_dir)
 
-    if __name__ == '__main__':
-        main()
+if __name__ == '__main__':
+    main()
