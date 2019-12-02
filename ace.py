@@ -158,6 +158,7 @@ class ConceptDiscovery(object):
 
     else:
       discovery_images = self.load_concept_imgs(discovery_images)
+      discovery_images = np.random.choice(discovery_images, self.num_discovery_imgs, replace=False)
       np.save(os.path.join(self.np_dir,"discovery_images.npy"), discovery_images)
 
     if self.num_workers:
