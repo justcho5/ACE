@@ -157,6 +157,7 @@ class ConceptDiscovery(object):
         np.save(os.path.join(self.np_dir,"discovery_images.npy"), discovery_images)
 
     else:
+      discovery_images = self.load_concept_imgs(discovery_images)
       np.save(os.path.join(self.np_dir,"discovery_images.npy"), discovery_images)
 
     if self.num_workers:
