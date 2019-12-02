@@ -64,6 +64,10 @@ labels_path, randomize=False,):
         sess, model_saved_path=model_path, labels_path=labels_path)
     elif model_to_run == 'XceptionHPV':
         mymodel= model.XceptionHPVWrapper_public(sess, model_path, labels_path)
+    elif model_to_run == 'XceptionHPV_224':
+        mymodel=model.XceptionHPVWrapper_224_public(sess,model_path, labels_path)
+    elif model_to_run == 'InceptionV3_224':
+        mymodel=model.InceptionV3Wrapper_224_public(sess, model_path, labels_path)
     else:
         raise ValueError('Invalid model name')
     if randomize:  # randomize the network!
@@ -412,7 +416,7 @@ def similarity(cd, num_random_exp=None, num_workers=25):
   similarity_dic = {bn: {} for bn in cd.bottlenecks}
   if num_random_exp is None:
     num_random_exp = cd.num_random_exp
-  randoms = ['random50_{}'.format(i) for i in np.arange(num_random_exp)]
+  randoms = ['random500_{}'.format(i) for i in np.arange(num_random_exp)]
   concepts = {}
   for bn in cd.bottlenecks:
     concepts[bn] = [cd.target_class, cd.random_concept] + cd.dic[bn]['concepts']

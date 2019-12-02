@@ -115,6 +115,7 @@ class ConceptDiscovery(object):
       Images of the desired concept or class.
     """
     concept_dir = os.path.join(self.source_dir, concept)
+    print(concept_dir)
     img_paths = [
         os.path.join(concept_dir, d)
         for d in tf.gfile.ListDirectory(concept_dir)
@@ -569,7 +570,7 @@ class ConceptDiscovery(object):
     """
     if randoms is None:
       randoms = [
-          'random50_{}'.format(i) for i in np.arange(self.num_random_exp)
+          'random500_{}'.format(i) for i in np.arange(self.num_random_exp)
       ]
     if self.num_workers:
       pool = multiprocessing.Pool(20)
@@ -707,7 +708,7 @@ class ConceptDiscovery(object):
     """
 
     tcav_scores = {bn: {} for bn in self.bottlenecks}
-    randoms = ['random50_{}'.format(i) for i in np.arange(self.num_random_exp)]
+    randoms = ['random500_{}'.format(i) for i in np.arange(self.num_random_exp)]
     if tcav_score_images is None:  # Load target class images if not given
       raw_imgs = self.load_concept_imgs(self.target_class, 2 * self.max_imgs)
       tcav_score_images = raw_imgs[-self.max_imgs:]
@@ -817,7 +818,7 @@ class ConceptDiscovery(object):
                         self.num_random_exp))
     class_acts = get_acts_from_images(
         images, self.model, bn).reshape([len(images), -1])
-    randoms = ['random50_{}'.format(i) for i in range(self.num_random_exp)]
+    randoms = ['random500_{}'.format(i) for i in range(self.num_random_exp)]
     for i, concept in enumerate(self.dic[bn]['concepts']):
       profile[:, i, :] = self._concept_profile(bn, class_acts, concept, randoms)
     if mean:
