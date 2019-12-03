@@ -104,7 +104,7 @@ class ConceptDiscovery(object):
     self.num_workers = num_workers
     self.average_image_value = average_image_value
 
-  def load_concept_imgs(self, concept, max_imgs=1000):
+  def load_concept_imgs(self, concept, max_imgs=1000, return_filenames=False):
     """Loads all colored images of a concept.
 
     Args:
@@ -123,7 +123,7 @@ class ConceptDiscovery(object):
     return load_images_from_files(
         img_paths,
         max_imgs=max_imgs,
-        return_filenames=False,
+        return_filenames=return_filenames,
         do_shuffle=False,
         run_parallel=(self.num_workers > 0),
         shape=(self.image_shape),
@@ -153,14 +153,23 @@ class ConceptDiscovery(object):
     dataset, image_numbers, patches = [], [], []
     if discovery_images is None:
         print("target class images")
-        discovery_images = self.load_concept_imgs(self.target_class, self.num_discovery_imgs)
+        discovery_images= self.load_concept_imgs(self.target_class, self.num_discovery_imgs)
         np.save(os.path.join(self.np_dir,"discovery_images.npy"), discovery_images)
-
     else:
-      discovery_images = self.load_concept_imgs(discovery_images)
-      discovery_images = np.random.choice(discovery_images, self.num_discovery_imgs, replace=False)
+      discover_images_pos, file_pos = self.load_concept_imgs("positive", self.num_discovery_imgs/2,return_filenames=True)
+      discover_images_neg, file_neg = self.load_concept_imgs("negative", self.num_discovery_imgs/2,return_filenames=True)
+      discovery_images = np.concatenate((discover_images_neg,discover_images_pos))
+      filenames=np.concatenate((file_neg,file_pos))
       np.save(os.path.join(self.np_dir,"discovery_images.npy"), discovery_images)
-
+      np.save(os.path.join(self.np_dir,"filenames.npy"),filenames)
+      with open(os.path.join(self.np_dir,'discovery_filenames.txt'), 'w') as f:
+        i = 0
+        for item in file_neg:
+          f.write("{} {} negative\n".format(i,item))
+          i+=1
+        for item in file_pos:
+          f.write("{} {} positive\n".format(i,item))
+          i+=1
     if self.num_workers:
       pool = multiprocessing.Pool(self.num_workers)
       outputs = pool.map(

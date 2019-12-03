@@ -71,7 +71,7 @@ def main(args):
 
 
   # # Discovering Concepts
-  cd.discover_concepts(method='KM', param_dicts={'n_clusters': 10})
+  cd.discover_concepts(method='KM', param_dicts={'n_clusters': 25})
   # cd.discover_concepts(method='KM', param_dicts={'n_clusters': 10})
   # del cd.dataset  # Free memory
   # del cd.image_numbers
