@@ -402,8 +402,8 @@ class ConceptDiscovery(object):
       #####
       today = date.today()
       d1 = today.strftime("%d-%m-%Y")
-      y=km.predict(acts)
-      plot_clusters(km, acts, y, title="{}_{}_{} clusters".format(d1,method,n_clusters), dir=self.image_dir)
+      # y=km.predict(acts)
+      plot_clusters(km, acts, asg, title="{}_{}_{} clusters_asg".format(d1,method,n_clusters), dir=self.image_dir)
       #####
     elif method == 'AP':
       damping = param_dict.pop('damping', 0.5)
@@ -490,7 +490,7 @@ class ConceptDiscovery(object):
           concept_image_numbers = set(np.load(os.path.join(self.np_dir,"image_numbers.npy"))[label_idxs])
           discovery_size=self.discovery_size
           highly_common_concept = len(
-              concept_image_numbers) > 0.5 * len(label_idxs)
+              concept_image_numbers) > 0.5 * len(label_idxs) # highly common across tiles
           mildly_common_concept = len(
               concept_image_numbers) > 0.25 * len(label_idxs)
           mildly_populated_concept = len(
@@ -501,14 +501,25 @@ class ConceptDiscovery(object):
           highly_populated_concept = len(
               concept_image_numbers) > 0.5 * discovery_size
           cond3 = non_common_concept and highly_populated_concept
-          if highly_common_concept or cond2 or cond3:
-            concept_number += 1
-            concept = '{}_concept{}'.format(self.target_class, concept_number)
-            bn_dic['concepts'].append(concept)
-            np.save(os.path.join(self.np_dir, "{}_images.npy".format(concept)), np.load(os.path.join(self.np_dir,"dataset.npy"))[concept_idxs])
-            np.save(os.path.join(self.np_dir, "{}_patches.npy".format(concept)), np.load(os.path.join(self.np_dir,"patches.npy"))[concept_idxs])
-            np.save(os.path.join(self.np_dir, "{}_image_numbers.npy".format(concept)), np.load(os.path.join(self.np_dir,"image_numbers.npy"))[concept_idxs])
 
+          ### ACE ORIGINAL FILTER
+          # if highly_common_concept or cond2 or cond3:
+          #   concept_number += 1
+          #   concept = '{}_concept{}'.format(self.target_class, concept_number)
+          #   bn_dic['concepts'].append(concept)
+          #   np.save(os.path.join(self.np_dir, "{}_images.npy".format(concept)), np.load(os.path.join(self.np_dir,"dataset.npy"))[concept_idxs])
+          #   np.save(os.path.join(self.np_dir, "{}_patches.npy".format(concept)), np.load(os.path.join(self.np_dir,"patches.npy"))[concept_idxs])
+          #   np.save(os.path.join(self.np_dir, "{}_image_numbers.npy".format(concept)), np.load(os.path.join(self.np_dir,"image_numbers.npy"))[concept_idxs])
+
+          ### WITHOUT THE ACE FILTERS
+          concept_number += 1
+          concept = '{}_concept{}'.format(self.target_class, concept_number)
+          bn_dic['concepts'].append(concept)
+          np.save(os.path.join(self.np_dir, "{}_images.npy".format(concept)), np.load(os.path.join(self.np_dir,"dataset.npy"))[concept_idxs])
+          np.save(os.path.join(self.np_dir, "{}_patches.npy".format(concept)), np.load(os.path.join(self.np_dir,"patches.npy"))[concept_idxs])
+          np.save(os.path.join(self.np_dir, "{}_image_numbers.npy".format(concept)), np.load(os.path.join(self.np_dir,"image_numbers.npy"))[concept_idxs])
+          ###
+          
             # bn_dic[concept] = {
             #     'images': dataset[concept_idxs],
             #     'patches': patches[concept_idxs],
