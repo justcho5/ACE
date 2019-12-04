@@ -17,8 +17,8 @@ import sklearn.metrics.pairwise as metrics
 import tensorflow as tf
 from tcav import cav
 from ace_helpers import *
-
-from pympler import muppy, summary
+from helpers import *
+from datetime import date
 import gc
 class ConceptDiscovery(object):
   """Discovering and testing concepts of a class.
@@ -38,6 +38,7 @@ class ConceptDiscovery(object):
                activation_dir,
                cav_dir,
                np_dir,
+               image_dir,
                num_random_exp=2,
                channel_mean=True,
                max_imgs=40,
@@ -93,6 +94,7 @@ class ConceptDiscovery(object):
     self.activation_dir = activation_dir
     self.cav_dir = cav_dir
     self.np_dir = np_dir
+    self.image_dir =image_dir
     self.channel_mean = channel_mean
     self.random_concept = random_concept
     self.image_shape = model.get_image_shape()[:2]
@@ -397,6 +399,12 @@ class ConceptDiscovery(object):
       d = np.linalg.norm(
           np.expand_dims(acts, 1) - np.expand_dims(centers, 0), ord=2, axis=-1)
       asg, cost = np.argmin(d, -1), np.min(d, -1)
+      #####
+      today = date.today()
+      d1 = today.strftime("%d/%m/%Y")
+      y=km.predict(acts)
+      plot_clusters(km, acts, y, title="{}-{}-{} clusters".format(d1,method,n_clusters), dir=self.image_dir)
+      #####
     elif method == 'AP':
       damping = param_dict.pop('damping', 0.5)
       ca = cluster.AffinityPropagation(damping)

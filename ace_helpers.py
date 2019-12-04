@@ -467,7 +467,7 @@ def save_ace_report(cd, accs, scores, address):
           scores[bn][concept], scores[bn][cd.random_concept])
       report += '\n{}:{}:{},{}'.format(bn, concept,
                                        np.mean(scores[bn][concept]), pvalue)
-  with tf.gfile.Open(address, 'w') as f:
+  with tf.gfile.Open(address, 'a') as f:
     f.write(report)
 
 

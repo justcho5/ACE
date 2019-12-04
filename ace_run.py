@@ -15,7 +15,6 @@ import tensorflow as tf
 import ace_helpers
 from ace import ConceptDiscovery
 import argparse
-from pympler import muppy, summary
 
 
 def main(args):
@@ -27,6 +26,7 @@ def main(args):
   activations_dir = os.path.join(args.working_dir, 'acts/')
   np_dir = os.path.join(args.working_dir, 'np/')
   results_summaries_dir = os.path.join(args.working_dir, 'results_summaries/')
+  image_dir = os.path.join(args.working_dir, 'images/')
   # print(args.working_dir)
   if tf.gfile.Exists(args.working_dir):
     tf.gfile.DeleteRecursively(args.working_dir)
@@ -37,6 +37,7 @@ def main(args):
   tf.gfile.MakeDirs(activations_dir)
   tf.gfile.MakeDirs(results_summaries_dir)
   tf.gfile.MakeDirs(np_dir)
+  tf.gfile.MakeDirs(image_dir)
   random_concept = 'random_discovery'  # Random concept for statistical testing
   sess = utils.create_session()
   print(args.model_to_run)
@@ -53,6 +54,7 @@ def main(args):
       activations_dir,
       cavs_dir,
       np_dir,
+      image_dir,
       num_random_exp=args.num_random_exp,
       channel_mean=True,
       max_imgs=args.max_imgs,
@@ -61,7 +63,8 @@ def main(args):
       num_workers=args.num_parallel_workers)
   # Creating the dataset of image patches and discover concepts
   # returns concept discovery target class images
-  cd.create_patches(param_dict={'n_segments': [15, 50, 80]}, discovery_images = "all")
+  # cd.create_patches(param_dict={'n_segments': [15, 50, 80]}, discovery_images = "all")
+  cd.create_patches(param_dict={'n_segments': [15, 50, 80]})
 
   # Saving the concept discovery target class images
   image_dir = os.path.join(discovered_concepts_dir, 'images')
