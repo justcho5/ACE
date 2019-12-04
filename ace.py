@@ -401,7 +401,7 @@ class ConceptDiscovery(object):
       asg, cost = np.argmin(d, -1), np.min(d, -1)
       #####
       today = date.today()
-      d1 = today.strftime("%d/%m/%Y")
+      d1 = today.strftime("%d-%m-%Y")
       y=km.predict(acts)
       plot_clusters(km, acts, y, title="{}-{}-{} clusters".format(d1,method,n_clusters), dir=self.image_dir)
       #####
