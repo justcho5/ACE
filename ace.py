@@ -490,7 +490,7 @@ class ConceptDiscovery(object):
           concept_image_numbers = set(np.load(os.path.join(self.np_dir,"image_numbers.npy"))[label_idxs])
           discovery_size=self.discovery_size
           highly_common_concept = len(
-              concept_image_numbers) > 0.5 * len(label_idxs) # highly common across tiles
+              concept_image_numbers) > 0.5 * len(label_idxs) # highly common across segments
           mildly_common_concept = len(
               concept_image_numbers) > 0.25 * len(label_idxs)
           mildly_populated_concept = len(
@@ -501,8 +501,6 @@ class ConceptDiscovery(object):
           highly_populated_concept = len(
               concept_image_numbers) > 0.5 * discovery_size
           cond3 = non_common_concept and highly_populated_concept
-
-          ### ACE ORIGINAL FILTER
           # if highly_common_concept or cond2 or cond3:
           #   concept_number += 1
           #   concept = '{}_concept{}'.format(self.target_class, concept_number)
@@ -510,22 +508,16 @@ class ConceptDiscovery(object):
           #   np.save(os.path.join(self.np_dir, "{}_images.npy".format(concept)), np.load(os.path.join(self.np_dir,"dataset.npy"))[concept_idxs])
           #   np.save(os.path.join(self.np_dir, "{}_patches.npy".format(concept)), np.load(os.path.join(self.np_dir,"patches.npy"))[concept_idxs])
           #   np.save(os.path.join(self.np_dir, "{}_image_numbers.npy".format(concept)), np.load(os.path.join(self.np_dir,"image_numbers.npy"))[concept_idxs])
-
-          ### WITHOUT THE ACE FILTERS
+          #
+          #   bn_dic[concept + '_center'] = centers[i]
           concept_number += 1
           concept = '{}_concept{}'.format(self.target_class, concept_number)
           bn_dic['concepts'].append(concept)
           np.save(os.path.join(self.np_dir, "{}_images.npy".format(concept)), np.load(os.path.join(self.np_dir,"dataset.npy"))[concept_idxs])
           np.save(os.path.join(self.np_dir, "{}_patches.npy".format(concept)), np.load(os.path.join(self.np_dir,"patches.npy"))[concept_idxs])
           np.save(os.path.join(self.np_dir, "{}_image_numbers.npy".format(concept)), np.load(os.path.join(self.np_dir,"image_numbers.npy"))[concept_idxs])
-          ###
-          
-            # bn_dic[concept] = {
-            #     'images': dataset[concept_idxs],
-            #     'patches': patches[concept_idxs],
-            #     'image_numbers': image_numbers[concept_idxs]
-            # }
-            bn_dic[concept + '_center'] = centers[i]
+
+          bn_dic[concept + '_center'] = centers[i]
       bn_dic.pop('label', None)
       bn_dic.pop('cost', None)
       self.dic[bn] = bn_dic
