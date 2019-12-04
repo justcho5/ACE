@@ -63,8 +63,8 @@ def main(args):
       num_workers=args.num_parallel_workers)
   # Creating the dataset of image patches and discover concepts
   # returns concept discovery target class images
-  # cd.create_patches(param_dict={'n_segments': [15, 50, 80]}, discovery_images = "all")
-  cd.create_patches(param_dict={'n_segments': [15, 50, 80]})
+  cd.create_patches(param_dict={'n_segments': [15, 50, 80]}, discovery_images = "all")
+  # cd.create_patches(param_dict={'n_segments': [15, 50, 80]})
 
   # Saving the concept discovery target class images
   image_dir = os.path.join(discovered_concepts_dir, 'images')

@@ -403,7 +403,7 @@ class ConceptDiscovery(object):
       today = date.today()
       d1 = today.strftime("%d-%m-%Y")
       y=km.predict(acts)
-      plot_clusters(km, acts, y, title="{}-{}-{} clusters".format(d1,method,n_clusters), dir=self.image_dir)
+      plot_clusters(km, acts, y, title="{}_{}_{} clusters".format(d1,method,n_clusters), dir=self.image_dir)
       #####
     elif method == 'AP':
       damping = param_dict.pop('damping', 0.5)
