@@ -63,7 +63,7 @@ def main(args):
       num_workers=args.num_parallel_workers)
   # Creating the dataset of image patches and discover concepts
   # returns concept discovery target class images
-  cd.create_patches(param_dict={'n_segments': [15, 50, 80]}, discovery_images = "all")
+  cd.create_patches(param_dict={'n_segments':[50]}, discovery_images = "all")
   # cd.create_patches(param_dict={'n_segments': [15, 50, 80]})
 
   # Saving the concept discovery target class images
@@ -74,7 +74,7 @@ def main(args):
 
 
   # # Discovering Concepts
-  cd.discover_concepts(method='KM', param_dicts={'n_clusters': 25})
+  cd.discover_concepts(method='KM', param_dicts={'n_clusters': 10})
   # cd.discover_concepts(method='KM', param_dicts={'n_clusters': 10})
   # del cd.dataset  # Free memory
   # del cd.image_numbers
@@ -96,7 +96,7 @@ def main(args):
                                  results_summaries_dir + 'ace_results.txt')
   # Plot examples of discovered concepts
   for bn in cd.bottlenecks:
-    ace_helpers.plot_concepts(cd, bn, 10, address=results_dir)
+    ace_helpers.plot_concepts(cd, bn,args.max_imgs , address=results_dir)
   # Delete concepts that don't pass statistical testing
   cd.test_and_remove_concepts(scores)
 

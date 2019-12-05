@@ -187,8 +187,11 @@ class ConceptDiscovery(object):
       print("num images: {}".format(len(discovery_images)))
       for fn, img in enumerate(discovery_images):
         print(fn)
+        
+        p_dict = param_dict.copy()
+        print(p_dict)
         image_superpixels, image_patches = self._return_superpixels(
-            img, method, param_dict)
+            img, method, p_dict)
 
         for superpixel, patch in zip(image_superpixels, image_patches):
           dataset.append(superpixel)
@@ -251,6 +254,7 @@ class ConceptDiscovery(object):
       param_dict = {}
     if method == 'slic':
       n_segmentss = param_dict.pop('n_segments', [15, 50, 80])
+      print(n_segmentss)
       n_params = len(n_segmentss)
       compactnesses = param_dict.pop('compactness', [20] * n_params)
       sigmas = param_dict.pop('sigma', [1.] * n_params)
