@@ -20,6 +20,7 @@ from ace_helpers import *
 from helpers import *
 from datetime import date
 import gc
+import math
 class ConceptDiscovery(object):
   """Discovering and testing concepts of a class.
 
@@ -131,7 +132,7 @@ class ConceptDiscovery(object):
         shape=(self.image_shape),
         num_workers=self.num_workers)
 
-  def create_patches(self, method='slic', discovery_images=None,
+  def create_patches(self, class_names, method='slic', discovery_images=None,
                      param_dict=None):
     """Creates a set of image patches using superpixel methods.
 
@@ -149,19 +150,23 @@ class ConceptDiscovery(object):
                 {'n_segments':[15,50,80], 'compactness':[10,10,10]} for slic
                 method.
     """
+    self.class_names = class_names
     print("START MAKING PATCHES")
     if param_dict is None:
       param_dict = {}
-    dataset, image_numbers, patches = [], [], []
+    dataset, image_numbers, patches, segment_class_labels = [], [], [], []
     if discovery_images is None:
         print("target class images")
         discovery_images= self.load_concept_imgs(self.target_class, self.num_discovery_imgs)
         np.save(os.path.join(self.np_dir,"discovery_images.npy"), discovery_images)
     else:
-      discover_images_pos, file_pos = self.load_concept_imgs("positive", self.num_discovery_imgs/2,return_filenames=True)
-      discover_images_neg, file_neg = self.load_concept_imgs("negative", self.num_discovery_imgs/2,return_filenames=True)
-      discovery_images = np.concatenate((discover_images_neg,discover_images_pos))
-      filenames=np.concatenate((file_neg,file_pos))
+      discovery_images_list = [self.load_concept_imgs(class, math.floor(self.num_discovery_imgs/len(self.class_names)), return_filenames=True) for class in self.class_names]
+      discovery_images = [i for i,j in discovery_images_list]
+      filenames = [j for i,j in discovery_images_list]
+      class_labels = [[i]*len(d) for i, d in enumerate(discovery_images)]
+      self.discovery_class_labels = np.concatenate(class_labels) # index for class in self.class_names
+      discovery_images = np.concatenate(discovery_images)
+      filenames=np.concatenate(filenames)
       np.save(os.path.join(self.np_dir,"discovery_images.npy"), discovery_images)
       np.save(os.path.join(self.np_dir,"filenames.npy"),filenames)
       with open(os.path.join(self.np_dir,'discovery_filenames.txt'), 'w') as f:
@@ -183,11 +188,13 @@ class ConceptDiscovery(object):
           dataset.append(superpixel)
           patches.append(patch)
           image_numbers.append(fn)
+          segment_class_labels.append(self.discovery_class_labels[fn])
+
     else:
       print("num images: {}".format(len(discovery_images)))
       for fn, img in enumerate(discovery_images):
         print(fn)
-        
+
         p_dict = param_dict.copy()
         print(p_dict)
         image_superpixels, image_patches = self._return_superpixels(
@@ -197,15 +204,17 @@ class ConceptDiscovery(object):
           dataset.append(superpixel)
           patches.append(patch)
           image_numbers.append(fn)
+          segment_class_labels.append(self.discovery_class_labels[fn])
     image_superpixels.clear()
     image_patches.clear()
     print("starting np loading")
     np.save(os.path.join(self.np_dir, "dataset.npy"),np.array(dataset, dtype=np.float16))
     dataset.clear()
-    np.save(os.path.join(self.np_dir, "image_numbers.npy"),np.array(image_numbers, dtype=np.int16))
+    np.save(os.path.join(self.np_dir, "image_numbers.npy"),np.array(image_numbers, dtype=np.int8))
     image_numbers.clear()
     np.save(os.path.join(self.np_dir, "patches.npy"),np.array(patches, dtype=np.float16))
     patches.clear()
+    np.save(os.path.join(self.np_dir, "segment_class_labels.npy"), np.array(patches,dtype=np.int8))
     self.discovery_size=len(discovery_images)
     # np_dataset = np.array(dataset, dtype=np.float16)
     # np_image_numbers = np.array(image_numbers, dtype=np.int16)
@@ -397,17 +406,26 @@ class ConceptDiscovery(object):
     centers = None
     if method == 'KM':
       n_clusters = param_dict.pop('n_clusters', 25)
-      km = cluster.KMeans(n_clusters)
-      d = km.fit(acts)
-      centers = km.cluster_centers_
-      d = np.linalg.norm(
-          np.expand_dims(acts, 1) - np.expand_dims(centers, 0), ord=2, axis=-1)
-      asg, cost = np.argmin(d, -1), np.min(d, -1)
+      models, asgs, costs, centers_lst = [],[],[],[]
+      for class in self.class_names:
+        km = cluster.KMeans(n_clusters)
+        d = km.fit(acts)
+        centers = km.cluster_centers_
+        d = np.linalg.norm(
+              np.expand_dims(acts, 1) - np.expand_dims(centers, 0), ord=2, axis=-1)
+        asg, cost = np.argmin(d, -1), np.min(d, -1)
+        models.append(km)
+        asgs.append(asg)
+        costs.append(cost)
+        centers_list.append(centers)
+      asg = np.concatenate(asgs)
+      cost = np.concatenate(costs)
+      centers = np.concatenate(centers_list)
       #####
-      today = date.today()
-      d1 = today.strftime("%d-%m-%Y")
-      # y=km.predict(acts)
-      plot_clusters(km, acts, asg, title="{}_{}_{} clusters_asg".format(d1,method,n_clusters), dir=self.image_dir)
+      # today = date.today()
+      # d1 = today.strftime("%d-%m-%Y")
+      # # y=km.predict(acts)
+      # plot_clusters(km, acts, asg, title="{}_{}_{} clusters_asg".format(d1,method,n_clusters), dir=self.image_dir)
       #####
     elif method == 'AP':
       damping = param_dict.pop('damping', 0.5)
@@ -514,6 +532,7 @@ class ConceptDiscovery(object):
           #   np.save(os.path.join(self.np_dir, "{}_image_numbers.npy".format(concept)), np.load(os.path.join(self.np_dir,"image_numbers.npy"))[concept_idxs])
           #
           #   bn_dic[concept + '_center'] = centers[i]
+
           concept_number += 1
           concept = '{}_concept{}'.format(self.target_class, concept_number)
           bn_dic['concepts'].append(concept)
