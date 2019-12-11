@@ -160,23 +160,20 @@ class ConceptDiscovery(object):
         discovery_images= self.load_concept_imgs(self.target_class, self.num_discovery_imgs)
         np.save(os.path.join(self.np_dir,"discovery_images.npy"), discovery_images)
     else:
-      discovery_images_list = [self.load_concept_imgs(class, math.floor(self.num_discovery_imgs/len(self.class_names)), return_filenames=True) for class in self.class_names]
+      discovery_images_list = [self.load_concept_imgs(clss, math.floor(self.num_discovery_imgs/len(self.class_names)), return_filenames=True) for clss in self.class_names]
       discovery_images = [i for i,j in discovery_images_list]
       filenames = [j for i,j in discovery_images_list]
+      
+      with open(os.path.join(self.np_dir,'discovery_filenames.txt'), 'w') as f:
+        for i, lst in enumerate(filenames):
+          for filename in lst:
+            f.write("{} {} {}\n".format(i, self.class_names[i], filename))
       class_labels = [[i]*len(d) for i, d in enumerate(discovery_images)]
       self.discovery_class_labels = np.concatenate(class_labels) # index for class in self.class_names
       discovery_images = np.concatenate(discovery_images)
       filenames=np.concatenate(filenames)
       np.save(os.path.join(self.np_dir,"discovery_images.npy"), discovery_images)
       np.save(os.path.join(self.np_dir,"filenames.npy"),filenames)
-      with open(os.path.join(self.np_dir,'discovery_filenames.txt'), 'w') as f:
-        i = 0
-        for item in file_neg:
-          f.write("{} {} negative\n".format(i,item))
-          i+=1
-        for item in file_pos:
-          f.write("{} {} positive\n".format(i,item))
-          i+=1
     if self.num_workers:
       pool = multiprocessing.Pool(self.num_workers)
       outputs = pool.map(
@@ -214,7 +211,8 @@ class ConceptDiscovery(object):
     image_numbers.clear()
     np.save(os.path.join(self.np_dir, "patches.npy"),np.array(patches, dtype=np.float16))
     patches.clear()
-    np.save(os.path.join(self.np_dir, "segment_class_labels.npy"), np.array(patches,dtype=np.int8))
+    self.segment_class_labels = np.array(segment_class_labels)
+    np.save(os.path.join(self.np_dir, "segment_class_labels.npy"), np.array(segment_class_labels,dtype=np.int8))
     self.discovery_size=len(discovery_images)
     # np_dataset = np.array(dataset, dtype=np.float16)
     # np_image_numbers = np.array(image_numbers, dtype=np.int16)
@@ -407,20 +405,25 @@ class ConceptDiscovery(object):
     if method == 'KM':
       n_clusters = param_dict.pop('n_clusters', 25)
       models, asgs, costs, centers_lst = [],[],[],[]
-      for class in self.class_names:
+      for i,clss in enumerate(self.class_names):
+        print("AWEF", i)
+        print(self.segment_class_labels)
+        acts_idxs = np.where(self.segment_class_labels==i)[0]
+        print(acts_idxs)
         km = cluster.KMeans(n_clusters)
-        d = km.fit(acts)
+        d = km.fit(acts[acts_idxs])
         centers = km.cluster_centers_
         d = np.linalg.norm(
-              np.expand_dims(acts, 1) - np.expand_dims(centers, 0), ord=2, axis=-1)
-        asg, cost = np.argmin(d, -1), np.min(d, -1)
+              np.expand_dims(acts[acts_idxs], 1) - np.expand_dims(centers, 0), ord=2, axis=-1)
+        asg, cost = (np.argmin(d, -1)+i*n_clusters), np.min(d, -1)
         models.append(km)
         asgs.append(asg)
         costs.append(cost)
-        centers_list.append(centers)
+        centers_lst.append(centers)
       asg = np.concatenate(asgs)
+      print(asg)
       cost = np.concatenate(costs)
-      centers = np.concatenate(centers_list)
+      centers = np.concatenate(centers_lst)
       #####
       # today = date.today()
       # d1 = today.strftime("%d-%m-%Y")
@@ -503,12 +506,19 @@ class ConceptDiscovery(object):
         bn_activations = activations[bn]
       bn_dic['label'], bn_dic['cost'], centers = self._cluster(
           bn_activations, method, param_dicts[bn])
+      print("label",bn_dic['label'])
       concept_number, bn_dic['concepts'] = 0, []
       for i in range(bn_dic['label'].max() + 1):
+        print(i)
+        print(bn_dic['label'])
+        print("number of labels", bn_dic['label'].shape)
         label_idxs = np.where(bn_dic['label'] == i)[0]
+        print("label_indx",label_idxs)
+        print(np.where(bn_dic['label']==i))
         if len(label_idxs) > self.min_imgs:
           concept_costs = bn_dic['cost'][label_idxs]
           concept_idxs = label_idxs[np.argsort(concept_costs)[:self.max_imgs]]
+          print(np.load(os.path.join(self.np_dir, "image_numbers.npy")).shape)
           concept_image_numbers = set(np.load(os.path.join(self.np_dir,"image_numbers.npy"))[label_idxs])
           discovery_size=self.discovery_size
           highly_common_concept = len(
